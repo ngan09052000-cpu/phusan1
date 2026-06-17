@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phụ Sản 1 – Hệ thống học tập</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f7f5f0; --surface:#fff; --surface2:#f0ede6; --border:#e2ddd4; --border2:#ccc7bc;
+  --text:#1a1814; --text2:#5a5650; --text3:#9a9590;
+  --teal:#0f6e56; --teal-l:#e1f5ee; --teal-m:#1d9e75;
+  --purple:#534ab7; --purple-l:#eeedfe;
+  --coral:#993c1d; --coral-l:#faece7;
+  --amber:#854f0b; --amber-l:#faeeda;
+  --red:#a32d2d; --red-l:#fcebeb;
+  --blue:#185fa5; --blue-l:#e6f1fb;
+  --r:10px; --rs:6px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100;flex-wrap:wrap}
+.logo{font-family:'Crimson Pro',serif;font-size:20px;font-weight:600;color:var(--teal)}
+.subtitle{font-size:12px;color:var(--text3)}
+.tabs{margin-left:auto;display:flex;gap:4px;flex-wrap:wrap}
+.tab-btn{padding:6px 12px;border-radius:var(--rs);border:1px solid var(--border);background:transparent;font-family:'Be Vietnam Pro',sans-serif;font-size:12px;color:var(--text2);cursor:pointer;transition:all .15s}
+.tab-btn:hover{background:var(--surface2)}
+.tab-btn.active{background:var(--teal);color:#fff;border-color:var(--teal)}
+.page{display:none;padding:20px;max-width:1060px;margin:0 auto}
+.page.active{display:block}
+
+/* POPUP */
+.ov{display:none;position:fixed;inset:0;background:rgba(26,24,20,.45);z-index:200;align-items:center;justify-content:center;padding:20px}
+.ov.open{display:flex}
+.pbox{background:var(--surface);border-radius:var(--r);border:1px solid var(--border);max-width:500px;width:100%;max-height:80vh;overflow-y:auto;padding:22px;position:relative}
+.pcl{position:absolute;top:12px;right:12px;width:26px;height:26px;border-radius:50%;border:1px solid var(--border);background:var(--surface2);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;color:var(--text2)}
+.pcl:hover{background:var(--border)}
+.ptitle{font-size:15px;font-weight:600;margin-bottom:10px;padding-right:28px}
+.pbody{font-size:13px;color:var(--text2);line-height:1.7}
+.pbody p{margin-bottom:7px}
+.pbody ul{padding-left:16px;margin:6px 0}
+.pbody li{margin-bottom:3px}
+.ex{background:var(--surface2);border-left:3px solid var(--teal-m);padding:8px 11px;border-radius:0 var(--rs) var(--rs) 0;font-family:'Crimson Pro',serif;font-size:13.5px;color:var(--text);margin-top:7px}
+.warn{background:var(--red-l);border-left:3px solid var(--red);padding:8px 11px;border-radius:0 var(--rs) var(--rs) 0;margin-top:7px;color:var(--red)}
+.tip{background:var(--teal-l);border-left:3px solid var(--teal);padding:8px 11px;border-radius:0 var(--rs) var(--rs) 0;margin-top:7px;color:var(--teal)}
+
+/* LAYOUT */
+.slabel{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;margin-top:24px}
+.slabel:first-child{margin-top:0}
+.grid{display:grid;gap:10px}
+.g2{grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
+.g3{grid-template-columns:repeat(auto-fill,minmax(195px,1fr))}
+.g4{grid-template-columns:repeat(auto-fill,minmax(155px,1fr))}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:13px 15px;cursor:pointer;transition:all .13s}
+.card:hover{border-color:var(--border2);transform:translateY(-1px);box-shadow:0 3px 10px rgba(0,0,0,.06)}
+.card.at{border-left:3px solid var(--teal-m)}
+.card.ap{border-left:3px solid var(--purple)}
+.card.ac{border-left:3px solid var(--coral)}
+.card.aa{border-left:3px solid var(--amber)}
+.card.ar{border-left:3px solid var(--red)}
+.card.ab{border-left:3px solid var(--blue)}
+.badge{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;margin-bottom:6px}
+.bt{background:var(--teal-l);color:var(--teal)}
+.bp{background:var(--purple-l);color:var(--purple)}
+.bc{background:var(--coral-l);color:var(--coral)}
+.ba{background:var(--amber-l);color:var(--amber)}
+.br{background:var(--red-l);color:var(--red)}
+.bb{background:var(--blue-l);color:var(--blue)}
+.ct{font-size:14px;font-weight:600;color:var(--text);margin-bottom:3px}
+.cs{font-size:12px;color:var(--text2);line-height:1.5}
+.cn{font-size:11px;color:var(--text3);margin-top:5px;border-top:1px solid var(--border);padding-top:5px}
+
+/* SEQUENCE */
+.seq{display:flex;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:18px}
+.si{flex:1;padding:13px 10px;text-align:center;cursor:pointer;transition:background .12s;border-right:1px solid var(--border)}
+.si:last-child{border-right:none}
+.si:hover{background:var(--surface2)}
+.sa{font-size:20px;font-weight:600;color:var(--teal);font-family:'Crimson Pro',serif;display:block;margin-bottom:3px}
+.sa.pur{color:var(--purple)}
+.sn{font-size:11px;color:var(--text2)}
+.sm{font-size:10px;color:var(--text3);margin-top:1px}
+
+/* CLOCK */
+.cwrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px;display:flex;gap:20px;align-items:flex-start;margin-bottom:10px}
+.cleg .cli{display:flex;align-items:flex-start;gap:9px;padding:7px 5px;border-radius:var(--rs);cursor:pointer;transition:background .1s;border-bottom:1px solid var(--border)}
+.cleg .cli:last-child{border-bottom:none}
+.cleg .cli:hover{background:var(--surface2)}
+.cdot{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;flex-shrink:0}
+.cdt{background:var(--teal-l);color:var(--teal)}
+.cdp{background:var(--purple-l);color:var(--purple)}
+.clpos{font-size:13px;font-weight:600;color:var(--text)}
+.cldesc{font-size:11px;color:var(--text2)}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse;background:var(--surface);border-radius:var(--r);overflow:hidden;border:1px solid var(--border)}
+.tbl th{background:var(--surface2);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--text3);padding:9px 13px;text-align:left;border-bottom:1px solid var(--border)}
+.tbl td{padding:9px 13px;font-size:12px;border-bottom:1px solid var(--border);vertical-align:top;color:var(--text2)}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:var(--surface2);cursor:pointer}
+.tbl td.trm{font-weight:600;color:var(--text);font-size:13px}
+.tbl td.ok{color:var(--teal);font-size:11px}
+.tbl td.bad{color:var(--red);font-size:11px}
+
+/* ALERT */
+.alert{border-radius:var(--r);padding:13px 15px;margin-bottom:10px}
+.alert-r{background:var(--red-l);border:1px solid #f7c1c1}
+.alert-t{background:var(--teal-l);border:1px solid #9fe1cb}
+.alert-a{background:var(--amber-l);border:1px solid #fac775}
+.atitle{font-size:13px;font-weight:600;margin-bottom:4px}
+.alert-r .atitle{color:var(--red)}
+.alert-t .atitle{color:var(--teal)}
+.alert-a .atitle{color:var(--amber)}
+.abody{font-size:12px;line-height:1.6;color:var(--text2)}
+
+/* MNEMONIC */
+.mbox{border-radius:var(--r);padding:14px 18px;margin-bottom:10px}
+.mbox-p{background:var(--purple-l);border:1px solid #afa9ec}
+.mbox-t{background:var(--teal-l);border:1px solid #9fe1cb}
+.mlabel{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px}
+.mbox-p .mlabel{color:var(--purple)}
+.mbox-t .mlabel{color:var(--teal)}
+.mtext{font-size:18px;font-family:'Crimson Pro',serif;font-weight:600;color:var(--text);margin-bottom:3px}
+.msub{font-size:12px;color:var(--text2)}
+
+/* FLASHCARD */
+.fwrap{perspective:800px}
+.fcard{position:relative;height:155px;transform-style:preserve-3d;transition:transform .45s;cursor:pointer;border-radius:var(--r)}
+.fcard.flip{transform:rotateY(180deg)}
+.ff,.fb{position:absolute;inset:0;border-radius:var(--r);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;padding:18px;text-align:center;backface-visibility:hidden}
+.ff{background:var(--surface)}
+.fb{background:var(--teal-l);transform:rotateY(180deg)}
+.fq{font-size:14px;font-weight:500;color:var(--text)}
+.fhint{font-size:11px;color:var(--text3);margin-top:7px}
+.fa{font-size:14px;color:var(--teal);font-weight:500;font-family:'Crimson Pro',serif}
+.fnav{display:flex;align-items:center;justify-content:space-between;margin-top:11px}
+.fbtn{padding:6px 14px;border-radius:var(--rs);border:1px solid var(--border);background:var(--surface);font-family:'Be Vietnam Pro',sans-serif;font-size:12px;cursor:pointer;color:var(--text2);transition:all .12s}
+.fbtn:hover{background:var(--surface2)}
+.fctr{font-size:12px;color:var(--text3)}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="logo">Phụ Sản 1</div>
+    <div class="subtitle">Tài liệu đào tạo nội bộ · Hệ thống học tập</div>
+  </div>
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showPage('bai1',this)">Bài 1 – Giải phẫu</button>
+    <button class="tab-btn" onclick="showPage('bai2',this)">Bài 2 – Quy trình</button>
+    <button class="tab-btn" onclick="showPage('bai3',this)">Bài 3 – Hồ sơ</button>
+    <button class="tab-btn" onclick="showPage('bai4',this)">Bài 4 – Xét nghiệm</button>
+    <button class="tab-btn" onclick="showPage('viettat',this)">Viết tắt</button>
+    <button class="tab-btn" onclick="showPage('flashcard',this)">Flashcard</button>
+    <button class="tab-btn" onclick="showPage('phuluc',this)">Phụ lục</button>
+  </div>
+</header>
+
+<div class="ov" id="ov" onclick="closeOv(event)">
+  <div class="pbox">
+    <button class="pcl" onclick="closeOv()">×</button>
+    <div class="ptitle" id="ptitle"></div>
+    <div class="pbody" id="pbody"></div>
+  </div>
+</div>
+
+<!-- BÀI 1 -->
+<div class="page active" id="page-bai1">
+
+<div class="slabel">Thứ tự ghi kết quả khám – bắt buộc, không đảo, không bỏ mục</div>
+<div class="seq">
+  <div class="si" onclick="pop(0)"><span class="sa">AH</span><div class="sn">Âm hộ</div><div class="sm">Nhìn trực tiếp</div></div>
+  <div class="si" onclick="pop(1)"><span class="sa">AĐ</span><div class="sn">Âm đạo</div><div class="sm">Qua mỏ vịt</div></div>
+  <div class="si" onclick="pop(2)"><span class="sa">CTC</span><div class="sn">Cổ tử cung</div><div class="sm">Qua mỏ vịt</div></div>
+  <div class="si" onclick="pop(3)"><span class="sa pur">TC</span><div class="sn">Tử cung</div><div class="sm">SA / khám tay</div></div>
+  <div class="si" onclick="pop(4)"><span class="sa pur">2PP</span><div class="sn">Hai phần phụ</div><div class="sm">SA / khám tay</div></div>
+</div>
+
+<div class="mbox mbox-p">
+  <div class="mlabel">Mnemonic thứ tự</div>
+  <div class="mtext">"Ăn Ăn Cua Tươi – Cùng Phụ huynh"</div>
+  <div class="msub">A(H) – A(Đ) – C(TC) – T(C) – 2(PP)</div>
+</div>
+
+
+<div class="slabel">Sơ đồ vị trí các cơ quan – từ ngoài vào trong</div>
+<div style="background:#fff;border:1px solid #e2ddd4;border-radius:10px;padding:12px;margin-bottom:12px;max-width:520px">
+<svg width="100%" viewBox="0 0 560 470" xmlns="http://www.w3.org/2000/svg">
+<title>Vị trí các cơ quan sinh dục nữ – sơ đồ thứ tự</title>
+<defs>
+  <marker id="ard" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="#aaa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+</defs>
+
+<!-- thanh màu phải: nhìn thấy -->
+<rect x="484" y="40" width="3" height="206" rx="1" fill="#1d9e75"/>
+<text x="494" y="96" font-family="sans-serif" font-size="11" fill="#0f6e56">Nhìn thấy</text>
+<text x="494" y="110" font-family="sans-serif" font-size="11" fill="#0f6e56">qua mỏ vịt</text>
+
+<!-- thanh màu phải: SA/khám tay -->
+<rect x="484" y="266" width="3" height="140" rx="1" fill="#534ab7"/>
+<text x="494" y="322" font-family="sans-serif" font-size="11" fill="#534ab7">SA /</text>
+<text x="494" y="336" font-family="sans-serif" font-size="11" fill="#534ab7">khám tay</text>
+
+<!-- AH -->
+<rect x="40" y="40" width="420" height="64" rx="10" fill="#faece7" stroke="#993c1d" stroke-width="1"/>
+<text x="220" y="62" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="600" fill="#712b13">AH – Âm hộ</text>
+<text x="220" y="82" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#993c1d">Môi lớn · Môi bé · Âm vật · Bartholin · Màng trinh</text>
+
+<!-- mũi tên -->
+<line x1="220" y1="104" x2="220" y2="120" stroke="#aaa" stroke-width="1.5" marker-end="url(#ard)"/>
+
+<!-- AĐ -->
+<rect x="40" y="122" width="420" height="64" rx="10" fill="#eeedfe" stroke="#534ab7" stroke-width="1"/>
+<text x="220" y="144" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="600" fill="#3c3489">AĐ – Âm đạo</text>
+<text x="220" y="164" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#534ab7">Thành AĐ · 4 túi cùng (cùng đồ)</text>
+
+<!-- mũi tên -->
+<line x1="220" y1="186" x2="220" y2="202" stroke="#aaa" stroke-width="1.5" marker-end="url(#ard)"/>
+
+<!-- CTC -->
+<rect x="40" y="204" width="420" height="64" rx="10" fill="#e1f5ee" stroke="#0f6e56" stroke-width="1"/>
+<text x="220" y="226" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="600" fill="#085041">CTC – Cổ tử cung</text>
+<text x="220" y="246" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#0f6e56">Môi trước (10–2h) · Môi sau (4–8h) · Lỗ CTC</text>
+
+<!-- mũi tên -->
+<line x1="220" y1="268" x2="220" y2="284" stroke="#aaa" stroke-width="1.5" marker-end="url(#ard)"/>
+
+<!-- TC -->
+<rect x="40" y="286" width="420" height="64" rx="10" fill="#e6f1fb" stroke="#185fa5" stroke-width="1"/>
+<text x="220" y="308" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="600" fill="#0c447c">TC – Tử cung</text>
+<text x="220" y="328" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#185fa5">Thân TC · buồng TC · cơ TC</text>
+
+<!-- 2PP label -->
+<text x="220" y="376" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="600" fill="#633806">2PP – Vòi trứng (ống dẫn trứng) + Buồng trứng</text>
+
+<!-- BT phải -->
+<rect x="40" y="388" width="196" height="56" rx="10" fill="#faeeda" stroke="#854f0b" stroke-width="1"/>
+<text x="138" y="410" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="600" fill="#633806">Buồng trứng phải</text>
+<text x="138" y="430" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#854f0b">Bên phải KH</text>
+
+<!-- BT trái -->
+<rect x="264" y="388" width="196" height="56" rx="10" fill="#faeeda" stroke="#854f0b" stroke-width="1"/>
+<text x="362" y="410" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="600" fill="#633806">Buồng trứng trái</text>
+<text x="362" y="430" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#854f0b">Bên trái KH</text>
+
+<!-- nối TC xuống 2PP -->
+<line x1="138" y1="350" x2="138" y2="386" stroke="#ba7517" stroke-width="0.8" stroke-dasharray="4 3"/>
+<line x1="362" y1="350" x2="362" y2="386" stroke="#ba7517" stroke-width="0.8" stroke-dasharray="4 3"/>
+</svg></svg>
+</div>
+
+<div class="slabel">Hình vẽ giải phẫu – tử cung, cổ tử cung, vòi trứng, buồng trứng</div>
+<div style="background:#fff;border:1px solid #e2ddd4;border-radius:10px;padding:12px;margin-bottom:12px;max-width:520px">
+<svg width="100%" viewBox="0 0 680 560" xmlns="http://www.w3.org/2000/svg">
+<title>Hình vẽ giải phẫu tử cung cổ tử cung vòi trứng buồng trứng</title>
+
+<!-- Âm đạo -->
+<path d="M296 510 Q274 500 270 472 Q268 448 272 410 Q284 395 340 393 Q396 395 408 410 Q412 448 410 472 Q406 500 384 510 Q362 518 340 518 Q318 518 296 510Z" fill="#F5C4B3" stroke="#D85A30" stroke-width="1.2"/>
+<line x1="298" y1="415" x2="294" y2="480" stroke="#F0997B" stroke-width="0.7" stroke-dasharray="4 3"/>
+<line x1="316" y1="408" x2="312" y2="484" stroke="#F0997B" stroke-width="0.7" stroke-dasharray="4 3"/>
+<line x1="364" y1="408" x2="368" y2="484" stroke="#F0997B" stroke-width="0.7" stroke-dasharray="4 3"/>
+<line x1="382" y1="415" x2="386" y2="480" stroke="#F0997B" stroke-width="0.7" stroke-dasharray="4 3"/>
+
+<!-- CTC -->
+<path d="M296 318 Q278 352 272 393 Q284 395 340 393 Q396 395 408 393 Q402 352 384 318 Z" fill="#9FE1CB" stroke="#0F6E56" stroke-width="1.3"/>
+<ellipse cx="340" cy="393" rx="18" ry="8" fill="#5DCAA5" stroke="#085041" stroke-width="1"/>
+<ellipse cx="340" cy="393" rx="5" ry="3" fill="#085041"/>
+
+<!-- Thân TC -->
+<path d="M206 222 Q196 172 212 135 Q232 92 278 70 Q306 57 340 55 Q374 57 402 70 Q448 92 468 135 Q484 172 474 222 Q462 262 434 285 Q408 304 384 312 Q362 318 340 318 Q318 318 296 312 Q272 304 246 285 Q218 262 206 222 Z" fill="#FBEAF0" stroke="#D4537E" stroke-width="1.8"/>
+<path d="M224 224 Q215 182 228 152 Q246 114 284 96 Q308 85 340 84 Q372 85 396 96 Q434 114 452 152 Q465 182 456 224 Q446 258 422 278 Q400 294 378 300 Q360 304 340 304 Q320 304 302 300 Q280 294 258 278 Q234 258 224 224 Z" fill="#F4C0D1" opacity="0.45" stroke="#ED93B1" stroke-width="0.8"/>
+<path d="M308 96 Q340 84 372 96 L380 250 Q340 264 300 250 Z" fill="#ED93B1" opacity="0.35"/>
+
+<!-- Vòi trứng phải -->
+<path d="M228 168 Q196 148 162 150 Q132 152 112 168 Q92 186 90 210 Q88 228 96 244" fill="none" stroke="#D4537E" stroke-width="3.5" stroke-linecap="round"/>
+<path d="M96 244 Q80 254 76 272" fill="none" stroke="#D4537E" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M96 244 Q86 258 84 276" fill="none" stroke="#D4537E" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M96 244 Q94 260 96 278" fill="none" stroke="#D4537E" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M96 244 Q104 258 106 274" fill="none" stroke="#D4537E" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M96 244 Q112 254 116 270" fill="none" stroke="#D4537E" stroke-width="2.5" stroke-linecap="round"/>
+
+<!-- Vòi trứng trái -->
+<path d="M452 168 Q484 148 518 150 Q548 152 568 168 Q588 186 590 210 Q592 228 584 244" fill="none" stroke="#D4537E" stroke-width="3.5" stroke-linecap="round"/>
+<path d="M584 244 Q600 254 604 272" fill="none" stroke="#D4537E" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M584 244 Q594 258 596 276" fill="none" stroke="#D4537E" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M584 244 Q586 260 584 278" fill="none" stroke="#D4537E" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M584 244 Q576 258 574 274" fill="none" stroke="#D4537E" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M584 244 Q568 254 564 270" fill="none" stroke="#D4537E" stroke-width="2.5" stroke-linecap="round"/>
+
+<!-- Buồng trứng phải -->
+<ellipse cx="72" cy="298" rx="44" ry="32" fill="#FAC775" stroke="#854F0B" stroke-width="1.8"/>
+<circle cx="56" cy="288" r="9" fill="#FAEEDA" stroke="#EF9F27" stroke-width="1"/>
+<circle cx="72" cy="280" r="7" fill="#FAEEDA" stroke="#EF9F27" stroke-width="1"/>
+<circle cx="86" cy="292" r="8" fill="#FAEEDA" stroke="#EF9F27" stroke-width="1"/>
+<circle cx="62" cy="306" r="6" fill="#FAEEDA" stroke="#EF9F27" stroke-width="0.8"/>
+<circle cx="80" cy="310" r="5" fill="#FAEEDA" stroke="#EF9F27" stroke-width="0.8"/>
+
+<!-- Buồng trứng trái -->
+<ellipse cx="608" cy="298" rx="44" ry="32" fill="#FAC775" stroke="#854F0B" stroke-width="1.8"/>
+<circle cx="594" cy="288" r="9" fill="#FAEEDA" stroke="#EF9F27" stroke-width="1"/>
+<circle cx="608" cy="280" r="7" fill="#FAEEDA" stroke="#EF9F27" stroke-width="1"/>
+<circle cx="622" cy="292" r="8" fill="#FAEEDA" stroke="#EF9F27" stroke-width="1"/>
+<circle cx="598" cy="306" r="6" fill="#FAEEDA" stroke="#EF9F27" stroke-width="0.8"/>
+<circle cx="616" cy="310" r="5" fill="#FAEEDA" stroke="#EF9F27" stroke-width="0.8"/>
+
+<!-- Nhãn TC -->
+<line x1="340" y1="55" x2="340" y2="24" stroke="#993556" stroke-width="1.2" stroke-dasharray="4 3"/>
+<rect x="264" y="6" width="152" height="26" rx="13" fill="#FBEAF0" stroke="#993556" stroke-width="1.2"/>
+<text x="340" y="19" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="13" font-weight="600" fill="#72243E">TC – Tử cung</text>
+
+<!-- Nhãn CTC -->
+<line x1="384" y1="348" x2="444" y2="358" stroke="#0F6E56" stroke-width="1.2" stroke-dasharray="4 3"/>
+<rect x="446" y="340" width="180" height="42" rx="10" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.2"/>
+<text x="536" y="354" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="13" font-weight="600" fill="#085041">CTC – Cổ tử cung</text>
+<text x="536" y="371" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="11" fill="#0F6E56">Nối TC với âm đạo</text>
+
+<!-- Nhãn AĐ -->
+<line x1="408" y1="455" x2="446" y2="438" stroke="#993C1D" stroke-width="1.2" stroke-dasharray="4 3"/>
+<rect x="448" y="418" width="140" height="42" rx="10" fill="#FAECE7" stroke="#993C1D" stroke-width="1.2"/>
+<text x="518" y="432" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="13" font-weight="600" fill="#712B13">AĐ – Âm đạo</text>
+<text x="518" y="449" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="11" fill="#993C1D">Ống dẫn ra ngoài</text>
+
+<!-- Nhãn BT phải -->
+<line x1="44" y1="298" x2="20" y2="370" stroke="#854F0B" stroke-width="1.2" stroke-dasharray="4 3"/>
+<rect x="8" y="370" width="176" height="44" rx="10" fill="#FAEEDA" stroke="#854F0B" stroke-width="1.2"/>
+<text x="96" y="384" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="13" font-weight="600" fill="#633806">Buồng trứng phải</text>
+<text x="96" y="401" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="11" fill="#854F0B">Sản xuất trứng + nội tiết</text>
+
+<!-- Nhãn VT phải -->
+<line x1="140" y1="150" x2="88" y2="130" stroke="#993556" stroke-width="1.2" stroke-dasharray="4 3"/>
+<rect x="8" y="112" width="150" height="30" rx="10" fill="#FBEAF0" stroke="#993556" stroke-width="1.2"/>
+<text x="83" y="127" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="13" font-weight="600" fill="#72243E">Vòi trứng phải</text>
+
+<!-- Nhãn 2PP -->
+<rect x="168" y="534" width="344" height="24" rx="12" fill="#FAEEDA" stroke="#854F0B" stroke-width="1"/>
+<text x="340" y="546" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="12" fill="#633806">2PP = Vòi trứng (ống dẫn trứng) + Buồng trứng – mỗi bên</text>
+
+</svg>
+</div>
+
+<div class="slabel">Cấu trúc âm hộ – 5 thành phần</div>
+<div class="grid g3">
+  <div class="card at" onclick="pop(5)"><span class="badge bt">Ngoài cùng</span><div class="ct">Môi lớn</div><div class="cs">Nếp da 2 bên, có lông mặt ngoài</div><div class="cn">Hay gặp: viêm, loét, sùi mào gà</div></div>
+  <div class="card at" onclick="pop(6)"><span class="badge bt">Hay gặp nhất</span><div class="ct">Môi bé</div><div class="cs">Nếp da mỏng, không lông, nhạy cảm</div><div class="cn">Vị trí hay gặp sùi mào gà nhất ở AH</div></div>
+  <div class="card" onclick="pop(7)"><span class="badge bt">Đỉnh AH</span><div class="ct">Âm vật</div><div class="cs">Ngay trên lỗ niệu đạo</div><div class="cn">Ít gặp tổn thương riêng lẻ</div></div>
+  <div class="card ac" onclick="pop(8)"><span class="badge bc">4–5h và 7–8h</span><div class="ct">Tuyến Bartholin</div><div class="cs">Cạnh lối vào âm đạo, 2 bên đối xứng</div><div class="cn">Viêm: sưng đau tại vị trí đồng hồ</div></div>
+  <div class="card ar" onclick="pop(9)"><span class="badge br">Bắt buộc hỏi</span><div class="ct">Màng trinh</div><div class="cs">Chưa QHTD = còn nguyên</div><div class="cn">KHÔNG đặt mỏ vịt thường → báo BS</div></div>
+</div>
+
+<div class="slabel">Hệ thống mô tả vị trí theo đồng hồ</div>
+<div class="cwrap">
+  <svg width="174" height="174" viewBox="0 0 174 174" style="flex-shrink:0">
+    <circle cx="87" cy="87" r="72" fill="none" stroke="#e2ddd4" stroke-width="1"/>
+    <circle cx="87" cy="87" r="4" fill="#9a9590"/>
+    <line x1="87" y1="15" x2="87" y2="159" stroke="#e2ddd4" stroke-width="0.5" stroke-dasharray="3 3"/>
+    <line x1="15" y1="87" x2="159" y2="87" stroke="#e2ddd4" stroke-width="0.5" stroke-dasharray="3 3"/>
+    <rect x="67" y="5" width="40" height="22" rx="5" fill="#e1f5ee" stroke="#9fe1cb" stroke-width="0.5"/>
+    <text x="87" y="20" text-anchor="middle" font-family="Be Vietnam Pro" font-size="11" font-weight="600" fill="#0f6e56">12h</text>
+    <rect x="67" y="147" width="40" height="22" rx="5" fill="#e1f5ee" stroke="#9fe1cb" stroke-width="0.5"/>
+    <text x="87" y="162" text-anchor="middle" font-family="Be Vietnam Pro" font-size="11" font-weight="600" fill="#0f6e56">6h</text>
+    <rect x="138" y="76" width="32" height="22" rx="5" fill="#eeedfe" stroke="#afa9ec" stroke-width="0.5"/>
+    <text x="154" y="91" text-anchor="middle" font-family="Be Vietnam Pro" font-size="11" font-weight="600" fill="#534ab7">3h</text>
+    <rect x="4" y="76" width="32" height="22" rx="5" fill="#eeedfe" stroke="#afa9ec" stroke-width="0.5"/>
+    <text x="20" y="91" text-anchor="middle" font-family="Be Vietnam Pro" font-size="11" font-weight="600" fill="#534ab7">9h</text>
+    <circle cx="114" cy="130" r="5" fill="#faece7" stroke="#f0997b" stroke-width="1"/>
+    <circle cx="60" cy="130" r="5" fill="#faece7" stroke="#f0997b" stroke-width="1"/>
+    <text x="87" y="143" text-anchor="middle" font-family="Be Vietnam Pro" font-size="9" fill="#993c1d">Bartholin</text>
+  </svg>
+  <div class="cleg" style="flex:1">
+    <div class="cli" onclick="pop(10)"><div class="cdot cdt">12h</div><div><div class="clpos">12h = hướng xương mu</div><div class="cldesc">Phía trên, điểm cao nhất</div></div></div>
+    <div class="cli" onclick="pop(11)"><div class="cdot cdt">6h</div><div><div class="clpos">6h = hướng hậu môn</div><div class="cldesc">Phía dưới, điểm thấp nhất</div></div></div>
+    <div class="cli" onclick="pop(12)"><div class="cdot cdp">3h</div><div><div class="clpos">3h = phải BS = trái KH</div><div class="cldesc">Ghi nguyên văn, không dịch</div></div></div>
+    <div class="cli" onclick="pop(13)"><div class="cdot cdp">9h</div><div><div class="clpos">9h = trái BS = phải KH</div><div class="cldesc">Ghi nguyên văn, không dịch</div></div></div>
+    <div class="cli" onclick="pop(14)"><div class="cdot cdt" style="font-size:9px">12h</div><div><div class="clpos">10h–2h = môi trước CTC</div><div class="cldesc">4h–8h = môi sau CTC</div></div></div>
+  </div>
+</div>
+
+<div class="slabel">Từ vựng mô tả CTC</div>
+<table class="tbl" style="margin-bottom:10px">
+  <thead><tr><th>Thuật ngữ</th><th>Nghĩa</th><th>Mẫu ghi hồ sơ</th><th>Lưu ý</th></tr></thead>
+  <tbody>
+    <tr onclick="pop(15)"><td class="trm">Lộ tuyến</td><td>Tế bào tuyến lan ra ngoài lỗ CTC. Rất phổ biến.</td><td>CTC: Lộ tuyến 2 môi từ 1h–5h, xung huyết nhẹ.</td><td class="ok">Lành tính</td></tr>
+    <tr onclick="pop(16)"><td class="trm">Nang Naboth</td><td>Nang nhỏ trắng xanh trên CTC. Rất phổ biến.</td><td>CTC: Có vài nang Naboth nhỏ.</td><td class="ok">Lành tính</td></tr>
+    <tr onclick="pop(17)"><td class="trm">Xung huyết</td><td>Vùng đỏ do tăng mạch máu, kèm viêm hoặc lộ tuyến.</td><td>Ghi kèm: "Lộ tuyến xung huyết nhẹ"</td><td class="ok">Ghi kèm, không riêng lẻ</td></tr>
+    <tr onclick="pop(18)"><td class="trm">Polyp CTC</td><td>Khối nhỏ mềm có cuống, thập thò qua lỗ CTC.</td><td>CTC: Polyp 1 khối ~Xcm, chân trong ống CTC.</td><td class="bad">Cần theo dõi</td></tr>
+    <tr onclick="pop(19)"><td class="trm">Tổn thương xấu</td><td>Loét, sùi, đổi màu bất thường trên CTC.</td><td>CTC: Tổn thương loét ~5mm vị trí 6h.</td><td class="bad">Cần XN thêm</td></tr>
+    <tr onclick="pop(20)"><td class="trm">Chỉ số CI</td><td>Độ mở và chất nhầy CTC – theo dõi rụng trứng.</td><td>CTC: CI 1 điểm. hoặc CI 333.</td><td>Hiếm muộn</td></tr>
+  </tbody>
+</table>
+
+<div class="slabel">Dấu hiệu nguy hiểm – phản xạ ngay</div>
+<div class="alert alert-r"><div class="atitle">Trễ kinh + test (+) + đau bụng 1 bên dữ dội → Nghi chửa ngoài tử cung</div><div class="abody">Báo BS NGAY, không để KH chờ. Đây là cấp cứu ngoại khoa. Nếu thêm mặt tái, vã mồ hôi, HA tụt → gọi BS và 115 ngay.</div></div>
+<div class="alert alert-a"><div class="atitle">Cùng đồ sau ấn đau + phồng + có khối</div><div class="abody">Nghi viêm vùng chậu hoặc áp xe cùng đồ. Báo BS và ghi theo mô tả của BS vào mục AĐ.</div></div>
+
+</div><!-- end bai1 -->
+
+<!-- BÀI 2 -->
+<div class="page" id="page-bai2">
+
+<div class="slabel">5 nhóm lý do khám thường gặp</div>
+<div class="grid g2">
+  <div class="card at" onclick="pop(21)"><span class="badge bt">Nhóm 1</span><div class="ct">Khí hư / dịch âm đạo bất thường</div><div class="cs">Màu vàng, xanh, mùi hôi, ngứa rát</div><div class="cn">XN trước tiên: Soi tươi (kết quả trong ca)</div></div>
+  <div class="card ap" onclick="pop(22)"><span class="badge bp">Nhóm 2</span><div class="ct">Ra máu bất thường / Rối loạn kinh nguyệt</div><div class="cs">Ra máu ngoài kỳ kinh · sau QHTD · kinh nhiều/ít bất thường · chậm kinh / mất kinh</div><div class="cn">Cần siêu âm trước khi kết luận</div></div>
+  <div class="card ac" onclick="pop(23)"><span class="badge bc">Nhóm 3</span><div class="ct">Đau bụng dưới / vùng chậu</div><div class="cs">Âm ỉ hoặc từng cơn, kèm sốt, khí hư</div><div class="cn">Siêu âm gần như bắt buộc</div></div>
+  <div class="card aa" onclick="pop(24)"><span class="badge ba">Nhóm 4</span><div class="ct">Tổn thương da vùng kín</div><div class="cs">Sùi, loét, mụn bất thường vùng kín</div><div class="cn">Thay tấm lót sau ca – kiểm soát lây chéo</div></div>
+  <div class="card at" onclick="pop(25)"><span class="badge bt">Nhóm 5</span><div class="ct">Khám thai định kỳ</div><div class="cs">Thai định kỳ, mới phát hiện thai</div><div class="cn">Dặn: mỏ vịt và SA âm đạo không ảnh hưởng thai</div></div>
+</div>
+
+<div class="slabel">6 bước quy trình phụ khám – sườn chung cho cả 5 nhóm thường gặp</div>
+<div class="grid g3">
+  <div class="card at" onclick="pop(26)"><span class="badge bt">Bước 1</span><div class="ct">Hỏi bệnh sử</div><div class="cs">Tiền sử theo khung chuẩn + bệnh sử đặc thù theo nhóm</div></div>
+  <div class="card at" onclick="pop(27)"><span class="badge bt">Bước 2</span><div class="ct">Chuẩn bị dụng cụ</div><div class="cs">Phù hợp từng nhóm, theo chỉ định BS</div></div>
+  <div class="card at" onclick="pop(28)"><span class="badge bt">Bước 3</span><div class="ct">Hướng dẫn lên bàn</div><div class="cs">Câu chuẩn, đỡ KH, bấm máy quay</div></div>
+  <div class="card ap" onclick="pop(29)"><span class="badge bp">Bước 4</span><div class="ct">Hỗ trợ trong khi khám</div><div class="cs">Gõ kết quả AH–AĐ–CTC–TC–2PP</div></div>
+  <div class="card ap" onclick="pop(30)"><span class="badge bp">Bước 5</span><div class="ct">Xử lý mẫu xét nghiệm</div><div class="cs">Dán code đúng, dặn thời gian có kết quả</div></div>
+  <div class="card ac" onclick="pop(31)"><span class="badge bc">Bước 6</span><div class="ct">Kết luận / Kê đơn / Dặn dò</div><div class="cs">Đọc lại hồ sơ cho BS trước khi mời KH vào</div></div>
+</div>
+
+<div class="slabel" style="margin-top:20px">Dấu hiệu cần báo BS ngay – nhóm 3</div>
+<div class="alert alert-r"><div class="atitle">Đau 1 bên dữ dội + chậm kinh → nghi GEU (chửa ngoài TC)</div><div class="abody">Báo BS ngay, không để KH chờ.</div></div>
+<div class="alert alert-r"><div class="atitle">Sốt cao trên 38.5°C + khí hư có mủ → nghi viêm phần phụ cấp</div><div class="abody">Báo BS và chuẩn bị CRP + CTM + PCR 14 tác nhân.</div></div>
+<div class="alert alert-r"><div class="atitle">Mặt tái + lạnh mồ hôi + HA tụt → cấp cứu</div><div class="abody">Báo BS và gọi 115 ngay lập tức.</div></div>
+
+</div><!-- end bai2 -->
+
+<!-- BÀI 3 -->
+<div class="page" id="page-bai3">
+
+<div class="slabel">Ba khái niệm cốt lõi – dễ nhầm nhất</div>
+<div class="grid g3" style="margin-bottom:16px">
+  <div class="card at" onclick="pop(32)"><span class="badge bt">Lý do khám</span><div class="ct">Ghi lời KH nói</div><div class="cs">Không ghi chẩn đoán. Không dùng từ hàn lâm thay lời KH.</div></div>
+  <div class="card ap" onclick="pop(33)"><span class="badge bp">Tiền sử</span><div class="ct">4 nhóm thông tin nền</div><div class="cs">Hỏi có hệ thống, ghi trước bệnh sử</div></div>
+  <div class="card ac" onclick="pop(34)"><span class="badge bc">Bệnh sử</span><div class="ct">Diễn biến lần khám này</div><div class="cs">Hỏi lại mỗi lần, kể cả tái khám</div></div>
+</div>
+
+<div class="slabel">PARA – ký hiệu tiền sử thai sản</div>
+<div class="mbox mbox-t">
+  <div class="mlabel">Mnemonic PARA</div>
+  <div class="mtext">"Đủ tháng – Non tháng – Sảy/Nạo – Còn sống"</div>
+  <div class="msub">P(≥37t) · A(22–36t) · R(sảy/nạo/hút) · A(con sống)</div>
+</div>
+<table class="tbl" style="margin-bottom:16px">
+  <thead><tr><th>PARA</th><th>Đọc như thế nào</th></tr></thead>
+  <tbody>
+    <tr onclick="pop(35)"><td class="trm">PARA 0000</td><td>Chưa có thai lần nào</td></tr>
+    <tr onclick="pop(36)"><td class="trm">PARA 1001</td><td>Sinh đủ tháng 1 lần, 1 con sống</td></tr>
+    <tr onclick="pop(37)"><td class="trm">PARA 2011</td><td>Sinh đủ tháng 2 lần, sảy 1, 1 con sống</td></tr>
+    <tr onclick="pop(38)"><td class="trm">PARA 0102</td><td>Sinh non 1 lần (VD: song thai 36t), 2 con sống</td></tr>
+    <tr onclick="pop(39)"><td class="trm">PARA 1011</td><td>Sinh đủ tháng 1 lần, sảy 1, 1 con sống</td></tr>
+  </tbody>
+</table>
+
+<div class="slabel">Tiền sử kinh nguyệt – thuật ngữ quan trọng</div>
+<table class="tbl">
+  <thead><tr><th>Thuật ngữ</th><th>Hỏi KH</th><th>Ghi hồ sơ</th></tr></thead>
+  <tbody>
+    <tr onclick="pop(40)"><td class="trm">KCC / LMP</td><td>"Kỳ kinh lần cuối bắt đầu ngày nào?"</td><td>KCC: 20/05/2026.</td></tr>
+    <tr onclick="pop(41)"><td class="trm">Vòng kinh</td><td>"Cách bao nhiêu ngày có kinh lại?"</td><td>Chu kỳ đều 28–30 ngày.</td></tr>
+    <tr onclick="pop(42)"><td class="trm">Số ngày hành kinh</td><td>"Mỗi lần kinh mấy ngày?"</td><td>Hành kinh 4–5 ngày.</td></tr>
+    <tr onclick="pop(43)"><td class="trm">Lượng kinh</td><td>"Thay bao nhiêu miếng BVS/ngày?"</td><td>Lượng vừa (3–4 BVS/ngày), không máu cục.</td></tr>
+    <tr onclick="pop(44)"><td class="trm">Đau bụng kinh</td><td>"Khi kinh có đau bụng không?"</td><td>Không đau. / Đau nhiều, cần giảm đau.</td></tr>
+  </tbody>
+</table>
+
+</div><!-- end bai3 -->
+
+<!-- BÀI 4 -->
+<div class="page" id="page-bai4">
+
+<div class="slabel">Nhóm 1 – Viêm nhiễm âm đạo và STI</div>
+<div class="alert alert-a"><div class="atitle">Lỗi hay gặp: gộp chung soi tươi với HPV/Thinprep</div><div class="abody">Soi tươi = XN VIÊM (kết quả trong ca). HPV + Thinprep = TẦM SOÁT UTCTC (3–5 ngày). Hai mục đích hoàn toàn khác nhau.</div></div>
+<div class="grid g2" style="margin-bottom:16px">
+  <div class="card at" onclick="pop(45)"><span class="badge bt">Kết quả trong ca</span><div class="ct">Soi tươi + vi nấm</div><div class="cs">XN viêm – phát hiện nấm, vi khuẩn, ký sinh trùng</div></div>
+  <div class="card ap" onclick="pop(46)"><span class="badge bp">3–5 ngày</span><div class="ct">PCR 14 tác nhân</div><div class="cs">STI – hiếm muộn bắt buộc dù không có triệu chứng</div></div>
+  <div class="card ab" onclick="pop(47)"><span class="badge bb">Tầm soát UTCTC</span><div class="ct">HPV + Thinprep</div><div class="cs">Không phải XN viêm – là tầm soát ung thư CTC</div></div>
+</div>
+
+<div class="slabel">Nhóm 2 – Phác đồ khám thai theo mốc tuần</div>
+<table class="tbl" style="margin-bottom:16px">
+  <thead><tr><th>Mốc</th><th>XN / Siêu âm bắt buộc</th><th>Lưu ý đặc biệt</th></tr></thead>
+  <tbody>
+    <tr onclick="pop(48)"><td class="trm">Dưới 10 tuần</td><td>SA xác nhận thai · betaHCG nếu chưa thấy túi ối</td><td>Dặn mỏ vịt không ảnh hưởng thai</td></tr>
+    <tr onclick="pop(49)"><td class="trm">11t5n – 13t6n</td><td>SA 5D · Tiền sản giật Q1 · TORCH · HBsAg+TPHA+HIV · NIPT</td><td>Mốc quan trọng nhất – đo HA 2 tay</td></tr>
+    <tr onclick="pop(50)"><td class="trm">21–23 tuần</td><td>SA 5D + đo CTC âm đạo · TPNT nước tiểu</td><td>In tờ hướng dẫn nghiệm pháp đường cho lần tới</td></tr>
+    <tr onclick="pop(51)"><td class="trm">25–27 tuần</td><td>Nghiệm pháp đường · TPNT · Sinh hoá máu</td><td>NHỊN ĂN từ 20h tối hôm trước</td></tr>
+    <tr onclick="pop(52)"><td class="trm">34 tuần</td><td>Cấy dịch AĐ tìm GBS + kháng sinh đồ</td><td>GBS(+) → điều trị KS dù không có triệu chứng</td></tr>
+    <tr onclick="pop(53)"><td class="trm">Trên 36 tuần</td><td>SA 2D + Monitor thường quy · TPNT mỗi lần</td><td>AFI ≤80 → Monitor + SA lại sau 3 ngày</td></tr>
+  </tbody>
+</table>
+
+<div class="slabel">Nhóm 3 – XN cần nhịn ăn vs không cần</div>
+<div class="grid g2">
+  <div class="card ar" onclick="pop(54)"><span class="badge br">Phải nhịn ăn ≥8 tiếng</span><div class="ct">Đường huyết · Bộ mỡ máu</div><div class="cs">Glucose lúc đói · Nghiệm pháp đường · Cholesterol · LDL · HDL · Triglycerid</div></div>
+  <div class="card at" onclick="pop(55)"><span class="badge bt">Không cần nhịn ăn</span><div class="ct">Hầu hết các XN còn lại</div><div class="cs">CTM · Men gan · Chức năng thận · CRP · TSH · Đông máu · Nhóm máu · Ferritin...</div></div>
+</div>
+
+<div class="slabel">Nhóm 4 – Các loại ống mẫu máu thường gặp</div>
+<table class="tbl">
+  <thead><tr><th>Loại ống</th><th>Màu nắp</th><th>XN tương ứng</th></tr></thead>
+  <tbody>
+    <tr onclick="pop(71)">
+      <td class="trm">EDTA K2/K3</td>
+      <td><span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:#9B59B6;vertical-align:middle;margin-right:6px"></span>Tím</td>
+      <td>Công thức máu (CTM)</td>
+    </tr>
+    <tr onclick="pop(72)">
+      <td class="trm">Serum / SST</td>
+      <td><span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:#F1C40F;vertical-align:middle;margin-right:6px"></span>Vàng hoặc đỏ</td>
+      <td>Sinh hoá: gan · thận · mỡ máu · nội tiết · chỉ điểm ung thư · betaHCG...</td>
+    </tr>
+    <tr onclick="pop(73)">
+      <td class="trm">Lithium Heparin</td>
+      <td><span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:#27AE60;vertical-align:middle;margin-right:6px"></span>Xanh lá</td>
+      <td>betaHCG</td>
+    </tr>
+    <tr onclick="pop(74)">
+      <td class="trm">Citrate</td>
+      <td><span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:#2980B9;vertical-align:middle;margin-right:6px"></span>Xanh dương</td>
+      <td>Đông máu: PT · APTT · Fibrinogen</td>
+    </tr>
+    <tr onclick="pop(75)">
+      <td class="trm">Glucose / Fluoride</td>
+      <td><span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:#7F8C8D;vertical-align:middle;margin-right:6px"></span>Xám</td>
+      <td>Đường huyết lúc đói (cần nhịn ăn)</td>
+    </tr>
+  </tbody>
+</table>
+
+</div><!-- end bai4 -->
+
+<!-- VIẾT TẮT -->
+<div class="page" id="page-viettat">
+
+<div class="slabel">Viết tắt được phép – danh sách chính thức Phụ Sản 1</div>
+<table class="tbl" style="margin-bottom:16px">
+  <thead><tr><th>Viết tắt</th><th>Tên đầy đủ</th><th>Ví dụ dùng đúng</th></tr></thead>
+  <tbody>
+    <tr onclick="pop(56)"><td class="trm">KH / BS / PK</td><td>Khách hàng / Bác sĩ / Phòng khám</td><td>KH cho biết ngứa 5 ngày nay. BS đã tư vấn.</td></tr>
+    <tr onclick="pop(57)"><td class="trm">AH / AĐ / CTC / TC / 2PP</td><td>5 mục kết quả khám</td><td>Ghi theo thứ tự cố định, không bỏ mục.</td></tr>
+    <tr onclick="pop(58)"><td class="trm">KCC / LMP</td><td>Kinh cuối cùng / Last Menstrual Period</td><td>KCC: 20/05/2026. (Phải ghi đủ ngày/tháng/năm)</td></tr>
+    <tr onclick="pop(59)"><td class="trm">PARA</td><td>Ký hiệu tiền sử thai sản</td><td>PARA 1001: Sinh thường 1 lần (2022), 1 con sống.</td></tr>
+    <tr onclick="pop(60)"><td class="trm">BVS / BPTT / BCS / DCTC</td><td>Băng vệ sinh / Biện pháp tránh thai / Bao cao su / Dụng cụ TC</td><td>BPTT: BCS. Ra nhiều (>5 BVS/ngày).</td></tr>
+    <tr onclick="pop(61)"><td class="trm">QHTD / UTCTC / TSG / GEU</td><td>Quan hệ TD / Ung thư CTC / Tiền sản giật / Thai ngoài TC</td><td>Nghi GEU → báo BS ngay.</td></tr>
+    <tr onclick="pop(62)"><td class="trm">XN / KQXN / GPB / HA / CTM</td><td>Xét nghiệm / Kết quả XN / Giải phẫu bệnh / Huyết áp / Công thức máu</td><td>Chờ KQXN HPV. HA: 120/80 mmHg.</td></tr>
+    <tr onclick="pop(63)"><td class="trm">BT (đứng trước mô tả)</td><td>Buồng trứng – CHỈ khi có mô tả đi kèm</td><td>BT phải: nang 25mm. BT trái: bình thường.</td></tr>
+  </tbody>
+</table>
+
+<div class="slabel">Viết tắt tuyệt đối không dùng</div>
+<table class="tbl">
+  <thead><tr><th>Sai</th><th>Vấn đề</th><th>Viết đúng</th></tr></thead>
+  <tbody>
+    <tr onclick="pop(64)"><td class="trm" style="color:var(--red)">ko / k</td><td>Ngôn ngữ chat</td><td>không</td></tr>
+    <tr onclick="pop(65)"><td class="trm" style="color:var(--red)">dc / đc</td><td>Người đọc không hiểu ngay</td><td>được</td></tr>
+    <tr onclick="pop(66)"><td class="trm" style="color:var(--red)">vs</td><td>"vs" trong y tế = versus (đối lập)</td><td>với</td></tr>
+    <tr onclick="pop(67)"><td class="trm" style="color:var(--red)">bt / bth đứng một mình</td><td>Mơ hồ: bình thường? bất thường? buồng trứng?</td><td>Bình thường (viết đầy đủ)</td></tr>
+    <tr onclick="pop(68)"><td class="trm" style="color:var(--red)">lt</td><td>Có thể là lễ tân, lao tâm, liều thuốc...</td><td>lộ tuyến</td></tr>
+    <tr onclick="pop(69)"><td class="trm" style="color:var(--red)">20/5 (thiếu năm)</td><td>Gây nhầm lẫn năm</td><td>20/05/2026</td></tr>
+    <tr onclick="pop(70)"><td class="trm" style="color:var(--red)">nang 2 phân</td><td>"Phân" không phải đơn vị y tế</td><td>Nang 20mm</td></tr>
+  </tbody>
+</table>
+
+</div><!-- end viettat -->
+
+<!-- FLASHCARD -->
+<div class="page" id="page-flashcard">
+<div class="slabel">Flashcard – bấm thẻ để lật, dùng nút để chuyển</div>
+<div class="fwrap">
+  <div class="fcard" id="fcard" onclick="flipCard()">
+    <div class="ff"><div><div class="fq" id="fq"></div><div class="fhint">Bấm để xem đáp án</div></div></div>
+    <div class="fb"><div class="fa" id="fa"></div></div>
+  </div>
+</div>
+<div class="fnav">
+  <button class="fbtn" onclick="prevCard()">← Trước</button>
+  <span class="fctr" id="fctr"></span>
+  <button class="fbtn" onclick="nextCard()">Tiếp →</button>
+</div>
+</div><!-- end flashcard -->
+
+<script>
+function showPage(idOrBtn, btn) {
+  var id, el;
+  if (typeof idOrBtn === 'string') {
+    id = idOrBtn; el = btn;
+  } else {
+    el = idOrBtn; id = el.getAttribute('data-page') || el.textContent;
+  }
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active')});
+  document.getElementById('page-'+id).classList.add('active');
+  if (el) el.classList.add('active');
+}
+
+var DATA = [
+  // 0
+  {t:'AH – Âm hộ', b:'<p>Cơ quan ngoài cùng, nhìn thấy trực tiếp khi khám. Gồm 5 cấu trúc: môi lớn, môi bé, âm vật, tuyến Bartholin, màng trinh.</p><div class="ex">AH: Bình thường.<br>AH: Môi bé 7h–9h có 5–6 sẩn hồng nhạt, chân rộng.</div><div class="tip">Ghi vào mục AH bất kỳ tổn thương nào ở vùng âm hộ, kể cả tuyến Bartholin và môi bé.</div>'},
+  // 1
+  {t:'AĐ – Âm đạo', b:'<p>Ống cơ trơn nối âm hộ với CTC, dài ~8–10 cm. Quan sát qua mỏ vịt.</p><p><strong>Mô tả theo 2 phần:</strong></p><ul><li><strong>Thành âm đạo:</strong> thành trước / thành sau / thành bên T / thành bên P</li><li><strong>Cùng đồ (4 túi cùng):</strong> phần đáy âm đạo bao quanh CTC, chia làm 4 túi theo 4 hướng</li></ul><p><strong>Cùng đồ là gì?</strong> CTC nhô xuống vào lòng âm đạo như một cái núm. Xung quanh núm đó, thành âm đạo tạo thành một rãnh vòng – rãnh đó gọi là cùng đồ. Có 4 túi: trước – sau – bên T – bên P.</p><p><strong>Tại sao cùng đồ sau quan trọng nhất?</strong> Vì nó tiếp giáp trực tiếp với túi cùng Douglas – khoang phúc mạc thấp nhất của ổ bụng. Khi có dịch hoặc máu chảy vào ổ bụng, đọng ở đây trước tiên.</p><div class="warn"><strong>Cùng đồ sau ấn đau</strong> → nghi viêm vùng chậu (PID)<br><strong>Cùng đồ sau phồng + có khối + đau dữ</strong> → nghi chửa ngoài TC vỡ, máu đổ vào túi cùng Douglas → báo BS ngay</div><div class="ex">AĐ: Khí hư màu vàng đục, lượng vừa, phủ thành âm đạo.<br>AĐ: Cùng đồ sau ấn đau.<br>AĐ: Cùng đồ sau phồng, có khối, ấn đau nhiều.<br>AĐ: Cùng đồ 4 túi bình thường.</div><div class="tip">Cùng đồ thuộc phần AĐ trong hồ sơ – không ghi vào TC hay 2PP.</div><div class="tip"><strong>Cùng đồ trái/phải theo giải phẫu của KH</strong> – không phải theo góc nhìn BS. Khác với hệ thống đồng hồ (3h/9h) vốn theo góc nhìn BS.</div>'},
+  // 2
+  {t:'CTC – Cổ tử cung', b:'<p>Quan sát qua mỏ vịt. BS mô tả tình trạng bề mặt CTC.</p><p>Các thuật ngữ hay gặp: lộ tuyến, viêm, polyp, nang Naboth, xung huyết, tổn thương.</p><div class="ex">CTC: Lộ tuyến 2 môi từ 1h–5h, xung huyết nhẹ. Có vài nang Naboth nhỏ.<br>CTC: Viêm 2 môi, môi sau ~7mm.</div><div class="tip">Lộ tuyến và nang Naboth là lành tính. Khi KH hỏi: "Bác sĩ sẽ giải thích cụ thể cho mình ạ."</div>'},
+  // 3
+  {t:'TC – Tử cung', b:'<p>Không nhìn thấy trực tiếp. Đánh giá qua siêu âm (chính xác) hoặc khám tay hai tay (ước lượng).</p><p><strong>Khám tay:</strong> BS một tay vào âm đạo, tay kia ấn bụng từ ngoài – ước lượng kích thước, mật độ, phát hiện khối.</p><div class="ex">SA: TC kích thước 65×45×40mm, cơ đồng nhất.<br>Khám tay: TC to bằng TC thai ~6 tuần, gồ ghề, di động tốt.</div><div class="tip">Nếu KH không siêu âm: ghi theo kết quả khám tay. Không để trống.</div>'},
+  // 4
+  {t:'2PP – Hai phần phụ', b:'<p><strong>2PP gồm 2 cấu trúc mỗi bên:</strong></p><ul><li><strong>Vòi trứng</strong> (= ống dẫn trứng = vòi tử cung): ống dẫn từ TC ra ngoài, gồm 4 đoạn – đoạn kẽ, đoạn eo, đoạn bóng (nơi thụ tinh), và phễu vòi trứng (loa vòi – đầu loe có tua rua đón trứng). <strong>Phễu vòi trứng là một bộ phận của vòi trứng</strong>, không phải cấu trúc riêng.</li><li><strong>Buồng trứng</strong>: sản xuất trứng và nội tiết tố nữ (Estrogen, Progesterone).</li></ul><p>Không nhìn thấy trực tiếp. Đánh giá qua siêu âm hoặc khám tay hai tay.</p><div class="ex">2PP: Không sờ thấy khối.<br>SA: BT phải nang đơn thuần 25mm, thành mỏng, dịch trong. BT trái bình thường.<br>2PP: Phần phụ phải hơi nề, ấn đau, kém di động.</div><div class="warn">BT = Buồng trứng (viết hoa, đứng trước mô tả cụ thể) → ĐƯỢC PHÉP.<br>bt / bth đứng một mình → KHÔNG được phép.</div><div class="tip">Vòi trứng = ống dẫn trứng = vòi tử cung – cùng một cấu trúc, nhiều tên gọi.</div>'},
+  // 5
+  {t:'Môi lớn', b:'<p>Nếp da ngoài cùng 2 bên âm hộ. Mặt ngoài có lông, mặt trong nhẵn. Có mô mỡ bên dưới.</p><p>Hay gặp: viêm, loét, sùi mào gà. BS mô tả theo vị trí đồng hồ hoặc mặt trong/ngoài.</p>'},
+  // 6
+  {t:'Môi bé', b:'<p>Nếp da mỏng, không có lông, không có mô mỡ. Nằm trong môi lớn, bao quanh lỗ âm đạo.</p><p>Phía trên tạo bao quy đầu âm vật. Phía dưới tạo mép sau (fourchette).</p><p><strong>Hay gặp sùi mào gà nhất ở âm hộ.</strong></p><p>Khi viêm âm đạo nặng: KH đau rát khi đi tiểu do nước tiểu chạm môi bé xung huyết – không phải nhiễm trùng tiết niệu.</p><div class="ex">AH: Môi bé 7h–9h có 5–6 sẩn hồng nhạt, bề mặt sùi nhẹ.</div>'},
+  // 7
+  {t:'Âm vật', b:'<p>Nằm ở đỉnh âm hộ, ngay trên lỗ niệu đạo, tại điểm gặp nhau của hai môi bé phía trên.</p><p>BS ít khi mô tả tổn thương riêng ở đây – ghi nguyên văn nếu BS có đề cập.</p>'},
+  // 8
+  {t:'Tuyến Bartholin', b:'<p>Hai tuyến đối xứng, cỡ hạt đậu đỏ. Nằm phía sau dưới môi lớn, cạnh bên lối vào âm đạo.</p><p><strong>Vị trí theo đồng hồ: 4–5h và 7–8h.</strong></p><p>Chức năng: tiết dịch bôi trơn. Viêm: sưng đỏ, đau, nóng tại vị trí đồng hồ.</p><div class="ex">AH: Tuyến Bartholin bên trái (7–8h) sưng, ấn đau, nóng đỏ.</div>'},
+  // 9
+  {t:'Màng trinh – Quy tắc quan trọng nhất', b:'<p>Vành mô mỏng quanh lỗ âm đạo. KH chưa QHTD: còn nguyên.</p><p><strong>Quy tắc bắt buộc:</strong> Trước khi chuẩn bị mỏ vịt, hỏi: "Chị đã có quan hệ tình dục chưa ạ?"</p><div class="warn"><strong>KH chưa QHTD → KHÔNG đặt mỏ vịt thường.</strong><br>Báo BS TRƯỚC khi vào khám. BS sẽ quyết định cách khám phù hợp.</div><p>Hỏi câu này không phải tò mò – mà để chuẩn bị đúng dụng cụ.</p>'},
+  // 10
+  {t:'12h – Hướng xương mu', b:'<p>Phía trên, hướng về xương mu. Điểm cao nhất.</p><div class="ex">BS nói: "Môi bé vị trí 12h có sẩn nhỏ ~2mm"<br>Ghi: AH: Môi bé vị trí 12h có sẩn nhỏ ~2mm.</div>'},
+  // 11
+  {t:'6h – Hướng hậu môn', b:'<p>Phía dưới, hướng về hậu môn. Điểm thấp nhất.</p><div class="ex">BS nói: "Màng trinh vị trí 6h có vết xước nhỏ"<br>Ghi nguyên văn.</div>'},
+  // 12
+  {t:'3h – Phải BS = Trái KH', b:'<p>3h là bên PHẢI của bác sĩ khi nhìn vào.</p><p>Vì bác sĩ và KH đối diện nhau: bên phải BS = bên TRÁI của KH nằm ngửa.</p><div class="tip">Không cần dịch khi ghi hồ sơ. Ghi nguyên văn "vị trí 3h" là đúng. Câu này để bạn hiểu hệ thống, không phải để dịch.</div>'},
+  // 13
+  {t:'9h – Trái BS = Phải KH', b:'<p>9h là bên TRÁI của bác sĩ khi nhìn vào = bên PHẢI của KH nằm ngửa.</p><div class="ex">BS nói: "Tuyến Bartholin bên trái (9h) sưng, ấn đau"<br>Ghi nguyên văn.</div>'},
+  // 14
+  {t:'Môi trước / Môi sau CTC', b:'<p><strong>Môi trước CTC</strong> = nửa phía xương mu = vùng <strong>10h → 12h → 2h</strong>.</p><p><strong>Môi sau CTC</strong> = nửa phía hậu môn = vùng <strong>4h → 6h → 8h</strong>.</p><div class="tip">Nhớ nhanh: môi trước quanh 12h (xương mu) – môi sau quanh 6h (hậu môn).</div><div class="ex">BS nói: "Viêm môi sau xung huyết ~7mm" → tổn thương vùng 4h–8h.<br>BS nói: "Sùi mào gà tại môi bé từ 7h đến 9h, 3–4 sẩn" → đây là môi bé AH, không phải CTC.</div><div class="warn">Môi trước/sau CTC ≠ Môi lớn/bé âm hộ. Hai khái niệm "môi" hoàn toàn khác nhau.</div>'},
+  // 15
+  {t:'Lộ tuyến CTC', b:'<p>Tế bào tuyến từ trong ống CTC lan ra ngoài lỗ CTC. Rất hay gặp – không phải ung thư.</p><p>Khi BS thấy lộ tuyến rộng hoặc có tổn thương: chuẩn bị HPV + Thinprep theo chỉ định.</p><div class="ex">CTC: Lộ tuyến 2 môi từ 1h–5h, xung huyết nhẹ. Có vài nang Naboth nhỏ.</div><div class="tip">KH hỏi "có nghiêm trọng không?" → "Bác sĩ sẽ đánh giá và giải thích cho mình ạ."</div>'},
+  // 16
+  {t:'Nang Naboth', b:'<p>Nang nhỏ màu trắng xanh trên bề mặt CTC. Xuất hiện khi tế bào phủ bịt kín miệng các tuyến nhỏ CTC – dịch tích tụ thành nang.</p><p>Rất phổ biến, không nguy hiểm, không cần điều trị.</p><div class="ex">CTC: Có vài nang Naboth nhỏ.<br>CTC: Lộ tuyến, có nang Naboth rải rác.</div>'},
+  // 17
+  {t:'Xung huyết', b:'<p>Vùng đỏ hơn bình thường do tăng mạch máu – thường đi kèm viêm hoặc lộ tuyến.</p><p>Không ghi "xung huyết" riêng lẻ, phải ghi kèm với mô tả chính.</p><div class="ex">CTC: Viêm 2 môi, xung huyết nhẹ.<br>CTC: Lộ tuyến xung huyết nhẹ.</div>'},
+  // 18
+  {t:'Polyp CTC', b:'<p>Khối nhỏ mềm thập thò qua lỗ CTC, có cuống. Nhìn thấy qua mỏ vịt.</p><p>Khi BS phát hiện: thường chỉ định cắt polyp hoặc theo dõi.</p><div class="ex">CTC: Polyp 1 khối ~Xcm, chân nằm trong ống CTC.</div>'},
+  // 19
+  {t:'Tổn thương / tổn thương xấu', b:'<p>Bất kỳ thay đổi bất thường nào BS nhìn thấy: loét, sùi, vùng đổi màu.</p><p>Khi BS nói "tổn thương xấu": chuẩn bị HPV + Thinprep hoặc sinh thiết theo chỉ định.</p><div class="ex">CTC: Tổn thương loét ~5mm vị trí 6h.<br>CTC: Tổn thương nghi ngờ – BS đã tư vấn sinh thiết.</div><div class="warn">Không tự thêm nhận xét. Ghi đúng nguyên văn BS đọc.</div>'},
+  // 20
+  {t:'Chỉ số CI – Cervical Index', b:'<p>Thang đánh giá 3 đặc điểm của CTC theo chu kỳ kinh nguyệt. Mỗi tiêu chí cho 0–3 điểm, tổng hợp thành mã 3 chữ số (VD: CI 222, CI 333).</p><p><strong>3 tiêu chí:</strong></p><table style="width:100%;border-collapse:collapse;font-size:12px;margin:8px 0"><thead><tr style="background:#f0ede6"><th style="padding:5px 8px;text-align:left;border:1px solid #e2ddd4">Tiêu chí</th><th style="padding:5px 8px;border:1px solid #e2ddd4">0đ</th><th style="padding:5px 8px;border:1px solid #e2ddd4">1đ</th><th style="padding:5px 8px;border:1px solid #e2ddd4">2đ</th><th style="padding:5px 8px;border:1px solid #e2ddd4">3đ</th></tr></thead><tbody><tr><td style="padding:5px 8px;border:1px solid #e2ddd4;font-weight:600">① Độ mở lỗ CTC</td><td style="padding:5px 8px;border:1px solid #e2ddd4">Đóng kín</td><td style="padding:5px 8px;border:1px solid #e2ddd4">Hé ~3mm</td><td style="padding:5px 8px;border:1px solid #e2ddd4">~5mm</td><td style="padding:5px 8px;border:1px solid #e2ddd4">≥8mm</td></tr><tr><td style="padding:5px 8px;border:1px solid #e2ddd4;font-weight:600">② Chất nhầy CTC</td><td style="padding:5px 8px;border:1px solid #e2ddd4">Không có / đặc dính</td><td style="padding:5px 8px;border:1px solid #e2ddd4">Ít, đặc</td><td style="padding:5px 8px;border:1px solid #e2ddd4">Vừa, trong hơn</td><td style="padding:5px 8px;border:1px solid #e2ddd4">Nhiều, trong, loãng, kéo sợi dài</td></tr><tr><td style="padding:5px 8px;border:1px solid #e2ddd4;font-weight:600">③ Vị trí CTC</td><td style="padding:5px 8px;border:1px solid #e2ddd4">Thấp, cứng, hướng sau</td><td style="padding:5px 8px;border:1px solid #e2ddd4">Trung gian</td><td style="padding:5px 8px;border:1px solid #e2ddd4">Cao hơn, mềm hơn</td><td style="padding:5px 8px;border:1px solid #e2ddd4">Cao, mềm, hướng ra trước</td></tr></tbody></table><p><strong>Ý nghĩa các mức CI:</strong></p><table style="width:100%;border-collapse:collapse;font-size:12px;margin:8px 0"><thead><tr style="background:#f0ede6"><th style="padding:5px 8px;text-align:left;border:1px solid #e2ddd4">CI</th><th style="padding:5px 8px;border:1px solid #e2ddd4">Ý nghĩa</th><th style="padding:5px 8px;border:1px solid #e2ddd4">Thời điểm chu kỳ</th></tr></thead><tbody><tr><td style="padding:5px 8px;border:1px solid #e2ddd4;font-weight:600">CI 000</td><td style="padding:5px 8px;border:1px solid #e2ddd4">CTC đóng, không nhầy, cứng thấp</td><td style="padding:5px 8px;border:1px solid #e2ddd4">Sau hành kinh (ngày 5–6) <strong>hoặc</strong> cuối pha hoàng thể (ngày 25–28, ngay trước kỳ kinh tiếp theo) – hai thời điểm khác nhau, cùng CI 000 vì Estrogen đều thấp</td></tr><tr><td style="padding:5px 8px;border:1px solid #e2ddd4;font-weight:600">CI 111</td><td style="padding:5px 8px;border:1px solid #e2ddd4">Bắt đầu thay đổi nhẹ</td><td style="padding:5px 8px;border:1px solid #e2ddd4">Pha nang noãn sớm</td></tr><tr><td style="padding:5px 8px;border:1px solid #e2ddd4;font-weight:600">CI 222</td><td style="padding:5px 8px;border:1px solid #e2ddd4">Thay đổi rõ, chuẩn bị rụng trứng</td><td style="padding:5px 8px;border:1px solid #e2ddd4">Vài ngày trước rụng trứng</td></tr><tr><td style="padding:5px 8px;border:1px solid #e2ddd4;font-weight:600;color:#0f6e56">CI 333</td><td style="padding:5px 8px;border:1px solid #e2ddd4;color:#0f6e56">CTC mở rộng, nhầy trong loãng kéo sợi dài, cao mềm ngả trước</td><td style="padding:5px 8px;border:1px solid #e2ddd4;color:#0f6e56">Rụng trứng – dễ thụ thai nhất</td></tr></tbody></table><div class="tip"><strong>Tại sao CI 333 = rụng trứng?</strong> Estrogen tăng đỉnh ngay trước rụng trứng kéo theo 3 thay đổi đồng thời: lỗ CTC mở rộng (tinh trùng dễ đi qua) + chất nhầy trong loãng kéo sợi (tinh trùng bơi dễ dàng) + CTC cao mềm ngả trước (tiếp xúc tinh dịch tốt hơn).</div><div class="ex">CTC: CI 000 – sau hành kinh.<br>CTC: CI 222 – chuẩn bị rụng trứng.<br>CTC: CI 333 – thời điểm rụng trứng.</div>'},
+  // 21
+  {t:'Nhóm 1 – Khí hư bất thường', b:'<p><strong>Nhận diện:</strong> Khí hư màu vàng, xanh, như mủ, có bọt, mùi hôi. Ngứa âm hộ, rát, đau tiểu.</p><p><strong>Bệnh sử cần hỏi:</strong></p><ul><li>Khí hư từ khi nào? Màu gì, mùi, lượng?</li><li>Có ngứa, rát? Đau khi đi tiểu không?</li><li>Đã dùng thuốc đặt, thụt rửa chưa?</li><li>Bạn tình có triệu chứng không?</li></ul><p><strong>Dụng cụ:</strong> Mỏ vịt (nếu đã QHTD) · que tăm bông lấy dịch soi tươi · lọ/que lấy mẫu PCR (nếu có chỉ định) · lọ + que lấy mẫu HPV + Thinprep (nếu BS tư vấn tầm soát UTCTC – dán code lên lọ trước khi lấy mẫu).</p><p><strong>XN quan trọng:</strong> Soi tươi + vi nấm (kết quả trong ca) – PCR 14 tác nhân STI (3–5 ngày) – HPV + Thinprep (3–5 ngày) – Tổng phân tích nước tiểu nếu KH có tiểu buốt/rắt/tiểu máu (kết quả trong ca).</p>'},
+  // 22
+  {t:'Nhóm 2 – Ra máu bất thường / Rối loạn kinh nguyệt', b:'<p><strong>Nhận diện:</strong> Ra máu ngoài kỳ kinh · ra máu sau QHTD · kinh ra nhiều/ít bất thường · ra máu khi đang mang thai · chậm kinh / mất kinh / nghi có thai.</p><p><strong>Trường hợp 1 – KH ra máu bất thường (bao gồm kinh nhiều/ít):</strong></p><ul><li>Ra máu từ khi nào? Lượng nhiều hay ít?</li><li>Màu: đỏ tươi, đỏ sẫm, nâu, hồng?</li><li>Kèm đau bụng không?</li><li>KCC ngày nào? Chu kỳ kinh có đều không?</li><li>Đã có QHTD chưa?</li><li>Đang dùng BPTT gì? (DCTC, thuốc nội tiết có thể gây ra máu bất thường)</li><li>Đã thử que thai chưa? Kết quả? (bắt buộc hỏi – ra máu có thể là dấu hiệu GEU hoặc dọa sảy)</li></ul><p><strong>Trường hợp 2 – KH chậm kinh / nghi có thai (hỏi từ câu 4):</strong></p><ul><li>KCC ngày nào? Chu kỳ kinh có đều không?</li><li>Đã có QHTD chưa?</li><li>Đang dùng BPTT gì?</li><li>Đã thử que thai chưa? Kết quả?</li><li>Có đau bụng, căng ngực, buồn nôn không?</li></ul><p><strong>Lưu ý:</strong> Nếu ra máu nhiều, để KH cởi quần ngoài trước, cởi quần lót khi lên bàn.</p><p><strong>XN hay gặp:</strong> betaHCG – Công thức máu – Đông máu – Chức năng tuyến giáp.</p>'},
+  // 23
+  {t:'Nhóm 3 – Đau bụng dưới / vùng chậu', b:'<p><strong>Nhận diện:</strong> Đau âm ỉ hoặc từng cơn, đau bẹn 1 hoặc 2 bên, đau khi QHTD, đau kèm sốt và khí hư.</p><p><strong>Bệnh sử cần hỏi:</strong></p><ul><li>Đau từ khi nào? Đau ở đâu? 1 bên hay 2 bên?</li><li>Tính chất: liên tục hay từng cơn? Mức độ đau?</li><li>Yếu tố tăng đau: vận động, QHTD, đi tiểu?</li><li>Có kèm buồn nôn, nôn, khó chịu tiêu hóa không?</li><li>Có sốt không? Nhiệt độ bao nhiêu?</li><li>KCC ngày nào? Có chậm kinh không?</li><li>Tiền sử phẫu thuật vùng bụng chậu (mổ u nang, mổ ruột thừa...)?</li></ul><p><strong>XN hay gặp:</strong> betaHCG · CRP · Công thức máu · Siêu âm (gần như bắt buộc với nhóm này).</p><div class="warn"><strong>Báo BS ngay:</strong> Đau 1 bên dữ dội + chậm kinh → nghi GEU. Sốt >38.5°C + mủ → nghi viêm phần phụ cấp. Mặt tái + HA tụt → cấp cứu.</div>'},
+  // 24
+  {t:'Nhóm 4 – Tổn thương da vùng kín', b:'<p><strong>Nhận diện:</strong> Mụn, sùi, loét, tổn thương bất thường vùng kín. Nghi sùi mào gà hoặc STI.</p><p><strong>Bệnh sử:</strong></p><ul><li>Xuất hiện từ bao giờ? Có lan rộng không?</li><li>Bạn tình có triệu chứng tương tự không?</li><li>Đã tự mua thuốc bôi chưa? Dùng thuốc gì? Hiệu quả ra sao?</li></ul><p><strong>Kiểm soát nhiễm khuẩn – bắt buộc:</strong></p><ul><li>Thay tấm lót bàn khám sau ca sùi mào gà, u mềm lây, nấm da</li><li>Vệ sinh toàn bộ bề mặt xe tiêm, bàn khám bằng gạc thấm cồn sau ca</li><li>Đeo khẩu trang + găng tay khi lấy mẫu và vệ sinh bề mặt bẩn</li><li>Khử trùng dụng cụ ngay sau khi dính máu/dịch cơ thể</li><li>Phân loại chất thải y tế đúng quy định (túi rác đúng màu)</li><li>Đảm bảo riêng tư tuyệt đối – chỉ phụ khám và BS trong phòng khi khám nhóm này</li></ul><p><strong>XN:</strong></p><ul><li><strong>Tìm HPV và STI:</strong> HPV · PCR 14 tác nhân (Chlamydia, lậu, Herpes...)</li><li><strong>Tầm soát bệnh lây qua đường máu/tình dục:</strong> HIV · HBsAg (viêm gan B) · TPHA (giang mai)</li></ul>'},
+  // 25
+  {t:'Nhóm 5 – Khám thai định kỳ', b:'<p><strong>Nhận diện:</strong> Thai phụ đến khám định kỳ, mới phát hiện thai, hoặc chỉ muốn siêu âm.</p><p><strong>Lưu ý đặc biệt:</strong></p><ul><li>Nếu KH chỉ muốn siêu âm: tư vấn tầm quan trọng của khám toàn diện (đo HA, nghe tim phổi, XN sàng lọc bệnh lý mẹ ảnh hưởng đến con, nhất là tiền sản giật, tiểu đường thai kỳ)</li><li>Trước khi đặt mỏ vịt: "Đặt mỏ vịt KHÔNG ảnh hưởng đến thai ạ."</li><li>Trước khi SA âm đạo đo CTC: "Hoàn toàn không ảnh hưởng đến thai ạ."</li><li>Ghi đầy đủ: Mạch · HA · Chiều cao tử cung · Vòng bụng · Tim thai</li><li>Dặn KH lịch tái khám và dấu hiệu cần đến ngay: đau bụng, ra máu, ra dịch</li></ul><p><strong>Dụng cụ chuẩn bị cho mọi mốc khám thai:</strong></p><ul><li>Mỏ vịt (nếu BS khám phụ khoa kèm) · dụng cụ lấy mẫu soi dịch (nếu có viêm nhiễm)</li><li>Ống nghe + bộ đo HA · Doppler nghe tim thai · Thước dây</li></ul><p><strong>Các mốc khám thai và XN theo từng giai đoạn:</strong></p><table style="width:100%;border-collapse:collapse;font-size:12px;margin:8px 0"><thead><tr style="background:#f0ede6"><th style="padding:5px 8px;text-align:left;border:1px solid #e2ddd4">Mốc</th><th style="padding:5px 8px;border:1px solid #e2ddd4">Siêu âm</th><th style="padding:5px 8px;border:1px solid #e2ddd4">Xét nghiệm máu / nước tiểu</th><th style="padding:5px 8px;border:1px solid #e2ddd4">Dụng cụ thêm</th></tr></thead><tbody><tr><td style="padding:5px 8px;border:1px solid #e2ddd4;font-weight:600">&lt;8 tuần</td><td style="padding:5px 8px;border:1px solid #e2ddd4">SA 2D: xác nhận thai trong TC, đếm số thai, đo CRL</td><td style="padding:5px 8px;border:1px solid #e2ddd4">betaHCG nếu chưa thấy túi ối hoặc nghi GEU</td><td style="padding:5px 8px;border:1px solid #e2ddd4">Ống nghe + HA · Mỏ vịt (nếu BS khám PK kèm)</td></tr><tr><td style="padding:5px 8px;border:1px solid #e2ddd4;font-weight:600">10 tuần</td><td style="padding:5px 8px;border:1px solid #e2ddd4">SA 2D: đánh giá hình thái sơ bộ, tư vấn NIPT</td><td style="padding:5px 8px;border:1px solid #e2ddd4">NIPT (nếu KH đồng ý) – lấy máu tĩnh mạch mẹ</td><td style="padding:5px 8px;border:1px solid #e2ddd4">Ống nghe + HA · Bảng giá NIPT · Mỏ vịt (nếu cần)</td></tr><tr><td style="padding:5px 8px;border:1px solid #e2ddd4;font-weight:600;color:#0f6e56">11t5n–13t6n ⭐</td><td style="padding:5px 8px;border:1px solid #e2ddd4">SA 5D: đo độ mờ da gáy, hình thái sớm · SA Doppler ĐM tử cung (tiền sản giật)</td><td style="padding:5px 8px;border:1px solid #e2ddd4">XN máu PlGF (tiền sản giật Q1) · CMV + Toxoplasma + Rubella (IgG+IgM) · HBsAg + TPHA + HIV · NIPT nếu chưa làm</td><td style="padding:5px 8px;border:1px solid #e2ddd4">Ống nghe + HA (đo 2 tay) · Thước dây · Bảng giá NIPT · Mỏ vịt (nếu cần)</td></tr><tr><td style="padding:5px 8px;border:1px solid #e2ddd4;font-weight:600">16–18 tuần</td><td style="padding:5px 8px;border:1px solid #e2ddd4">SA 5D: hình thái thai, đo CTC âm đạo</td><td style="padding:5px 8px;border:1px solid #e2ddd4">CTM · Nhóm máu ABO-Rh</td><td style="padding:5px 8px;border:1px solid #e2ddd4">Ống nghe + HA · Thước dây · Mỏ vịt (nếu cần)</td></tr><tr><td style="padding:5px 8px;border:1px solid #e2ddd4;font-weight:600">22 tuần</td><td style="padding:5px 8px;border:1px solid #e2ddd4">SA 5D: kiểm tra hình thái toàn diện thai nhi</td><td style="padding:5px 8px;border:1px solid #e2ddd4">TPNT nước tiểu</td><td style="padding:5px 8px;border:1px solid #e2ddd4">Ống nghe + HA · Doppler tim thai · Thước dây · In giấy hướng dẫn nghiệm pháp đường · Mỏ vịt (nếu cần)</td></tr><tr><td style="padding:5px 8px;border:1px solid #e2ddd4;font-weight:600;color:#a32d2d">24–28 tuần ⭐</td><td style="padding:5px 8px;border:1px solid #e2ddd4">SA 2D hoặc 5D: đánh giá tăng trưởng thai, ối</td><td style="padding:5px 8px;border:1px solid #e2ddd4">Nghiệm pháp dung nạp glucose 75g – lấy máu 3 lần (0 phút / 60 phút / 120 phút) · Bộ sinh hoá máu cơ bản · TPNT nước tiểu</td><td style="padding:5px 8px;border:1px solid #e2ddd4">Ống nghe + HA · Doppler tim thai · Thước dây · Nhắc KH nhịn ăn từ 20h tối hôm trước · Mỏ vịt (nếu cần)</td></tr><tr><td style="padding:5px 8px;border:1px solid #e2ddd4;font-weight:600">31–33 tuần</td><td style="padding:5px 8px;border:1px solid #e2ddd4">SA 5D: đánh giá tăng trưởng, vị trí nhau, ối</td><td style="padding:5px 8px;border:1px solid #e2ddd4">TPNT nước tiểu · Cấy dịch AĐ tìm GBS + kháng sinh đồ (có thể làm mốc này)</td><td style="padding:5px 8px;border:1px solid #e2ddd4">Ống nghe + HA · Doppler tim thai · Thước dây · Mỏ vịt (nếu cần)</td></tr><tr><td style="padding:5px 8px;border:1px solid #e2ddd4;font-weight:600">34–36 tuần</td><td style="padding:5px 8px;border:1px solid #e2ddd4">SA 2D: tăng trưởng thai, ngôi thai, ối, nhau</td><td style="padding:5px 8px;border:1px solid #e2ddd4">TPNT nước tiểu · Monitor sản khoa nếu có cơn gò hoặc đau bụng</td><td style="padding:5px 8px;border:1px solid #e2ddd4">Ống nghe + HA · Doppler tim thai · Thước dây · Mỏ vịt (nếu cần)</td></tr><tr><td style="padding:5px 8px;border:1px solid #e2ddd4;font-weight:600;color:#534ab7">&gt;36 tuần</td><td style="padding:5px 8px;border:1px solid #e2ddd4">SA 2D: ngôi thai, ối (AFI), nhau bám</td><td style="padding:5px 8px;border:1px solid #e2ddd4">TPNT nước tiểu · Monitor sản khoa thường quy mỗi lần khám</td><td style="padding:5px 8px;border:1px solid #e2ddd4">Ống nghe + HA · Doppler tim thai · Thước dây · Mỏ vịt (nếu cần)</td></tr></tbody></table>'},
+  // 26
+  {t:'Bước 1 – Hỏi tiền sử và bệnh sử', b:'<p>Bước quan trọng nhất trước khi BS vào khám. <strong>Hỏi tiền sử TRƯỚC, bệnh sử SAU.</strong></p><p><strong>Bước 1a – Hỏi tiền sử (khung chuẩn cho mọi KH):</strong></p><ul><li>Xác nhận tên + năm sinh</li><li>Lý do đến khám hôm nay</li><li>Đã có gia đình chưa? Đã QHTD chưa? (quyết định có đặt mỏ vịt không)</li><li>Tiền sử sản khoa: PARA · KCC · Chu kỳ kinh</li><li>HPV và tầm soát UTCTC: 1–2 năm nay đã làm chưa?</li><li>Dị ứng thuốc hoặc thức ăn</li><li>Bệnh mạn tính, thuốc đang dùng, phẫu thuật đã qua</li><li>Tiền sử gia đình: Thalassemia · Tiểu đường · Ung thư vú/buồng trứng</li></ul><p><strong>Bước 1b – Hỏi bệnh sử (đặc thù theo từng nhóm):</strong> Diễn biến triệu chứng hiện tại – bắt đầu từ khi nào, tính chất, đã tự điều trị gì chưa...</p><p><strong>Ghi hồ sơ theo thứ tự:</strong> Lý do khám → Tiền sử → Bệnh sử.</p><div class="warn">Không hỏi nhiều câu cùng lúc. Hỏi từng câu, chờ trả lời rồi mới hỏi tiếp. Dùng ngôn ngữ nhẹ nhàng khi hỏi vấn đề nhạy cảm.</div><div class="tip">Với KH tái khám: xem lại lịch sử khám trước, ghi nhớ tên và tình trạng để thể hiện sự quan tâm.</div>'},
+  // 27
+  {t:'Bước 2 – Chuẩn bị dụng cụ', b:'<p><strong>Dụng cụ chung:</strong> Bàn khám sạch, tấm lót phẳng.</p><p><strong>Mỏ vịt:</strong> Xé sẵn nhưng để trong bao nilon, không đặt xuống mặt xe tiêm. KH chưa QHTD → không chuẩn bị.</p><p><strong>Dụng cụ lấy mẫu:</strong> Chỉ xé khi có chỉ định từ BS – không tự xé trước.</p><p><strong>Pank + bông gạc – 3 tình huống:</strong></p><ul><li><strong>Bông gạc khô:</strong> Lau sạch dịch âm đạo trước khi lấy mẫu HPV/Thinprep – dịch nhiều làm loãng mẫu, kết quả kém chính xác</li><li><strong>Bông gạc betadine:</strong> Sát khuẩn CTC trước thủ thuật (đặt DCTC, sinh thiết, cắt polyp...)</li><li><strong>Bông gạc nước muối:</strong> Lau sạch dịch mủ nhiều để BS quan sát CTC rõ hơn, hoặc lau sau thủ thuật</li></ul><p>Chuẩn bị theo chỉ định BS – không tự ý chuẩn bị trước khi BS yêu cầu.</p><p><strong>Nếu BS tư vấn tầm soát UTCTC (áp dụng mọi nhóm):</strong> Chuẩn bị lọ Thinprep (đã dán code) + que cytobrush/spatula lấy tế bào CTC. Xé dụng cụ khi BS chỉ định, không xé trước.</p>'},
+  // 28
+  {t:'Bước 3 – Hướng dẫn lên bàn khám', b:'<p><strong>Câu chuẩn:</strong></p><div class="ex">"Em mời chị lên bàn để bác khám ạ. Mông đặt sát mép bàn, nằm ra và gác 2 chân lên 2 bên, thả lỏng mông – càng thả lỏng thì BS khám càng không đau ạ."</div><p>Đỡ KH nếu cần. Hỏi có cần băng vệ sinh không, đưa bằng 2 tay sau khi khám xong.</p><p>Bấm máy quay sau khi KH đã nằm thoải mái. Tắt trước khi KH ngồi dậy.</p>'},
+  // 29
+  {t:'Bước 4 – Hỗ trợ trong khi BS khám', b:'<p>Nghe BS nói chuyện với KH để biết cần chuẩn bị thêm gì. Mở dụng cụ đúng lúc – không để BS phải chờ.</p><p>Hỗ trợ chụp ảnh khi BS yêu cầu.</p><p><strong>Gõ kết quả khám theo đúng 5 mục:</strong></p><div class="ex">AH – AĐ – CTC – TC – 2PP<br>Đầy đủ, đúng chính tả, không viết tắt tự phát.</div>'},
+  // 30
+  {t:'Bước 5 – Xử lý mẫu xét nghiệm', b:'<p>Ghi đúng thông tin trên lọ mẫu (code của KH – mỗi code gắn 1 KH). Đặt vào mặt trên xe tiêm để lễ tân XN lấy. Giữ lại code nếu KH chưa dùng hết.</p><p><strong>Dặn KH:</strong></p><div class="ex">Soi tươi: kết quả sau ... phút.<br>HPV / Thinprep / PCR: sau ... ngày làm việc.</div>'},
+  // 31
+  {t:'Bước 6 – Kết luận / Kê đơn / Dặn dò', b:'<p>Kiểm tra link kết quả. Khi đủ kết quả: báo BS, in kết quả, đọc lại hồ sơ cho BS nghe (lý do khám, bệnh sử, tiền sử, kết quả khám) trước khi mời KH vào.</p><p>Ghi chẩn đoán text + chọn mã ICD 10. Đánh máy đơn thuốc, dặn dò. Đọc lại để BS kiểm tra trước khi xác nhận.</p><div class="ex">Hướng dẫn KH xuống nhà thuốc. Hotline tư vấn: 1800.2248.</div>'},
+  // 32
+  {t:'Lý do khám – cách ghi đúng', b:'<p>Là lý do KH đến khám hôm nay. Có thể là triệu chứng đang gặp, hoặc khám định kỳ không có triệu chứng. Ghi theo LỜI KH nói – không ghi chẩn đoán y khoa.</p><div class="warn"><strong>SAI:</strong> Viêm âm đạo – Xuất huyết phụ khoa – Thai 36 tuần<br><strong>ĐÚNG:</strong> Ra khí hư màu vàng kèm ngứa từ 5 ngày nay – Ra máu ngoài kỳ kinh từ 2 ngày nay</div><div class="tip">Hỏi: "Hôm nay chị đến vì vấn đề gì ạ?" → Ghi nguyên văn câu trả lời.</div>'},
+  // 33
+  {t:'Tiền sử – 4 nhóm cần hỏi', b:'<p>Thông tin sức khoẻ trước lần khám này. Ổn định, ít thay đổi.</p><p><strong>4 nhóm theo thứ tự:</strong></p><ul><li><strong>Sản phụ khoa:</strong> PARA – Kinh nguyệt – BPTT – HPV – Tiền sử phụ khoa</li><li><strong>Nội khoa:</strong> Bệnh mạn tính – Thuốc đang dùng</li><li><strong>Ngoại khoa + Dị ứng:</strong> Phẫu thuật đã qua – Dị ứng thuốc/thức ăn</li><li><strong>Gia đình:</strong> Thalassemia, UT vú/buồng trứng, ĐTĐ</li></ul><div class="tip">Nhóm sản phụ khoa hỏi TRƯỚC TIÊN vì quan trọng nhất.</div>'},
+  // 34
+  {t:'Bệnh sử – 5 điều cần biết', b:'<p>Diễn biến cụ thể của lần khám này. Phải hỏi lại mỗi lần dù KH tái khám.</p><p><strong>5 điều cần hỏi với mỗi triệu chứng:</strong></p><ul><li>Khi nào bắt đầu?</li><li>Tính chất: màu, mùi, lượng, đau âm ỉ hay từng cơn?</li><li>Diễn biến: tăng / giảm / ổn định?</li><li>Có gì kèm theo: sốt, tiểu buốt, ra máu?</li><li>Đã tự điều trị gì chưa? Kết quả?</li></ul><div class="tip"><strong>Tái khám:</strong> Tóm tắt lần trước TRƯỚC (chẩn đoán + thuốc + kết quả), rồi mới ghi diễn biến hiện tại.</div>'},
+  // 35
+  {t:'PARA 0000', b:'<p>Chưa có thai lần nào.</p>'},
+  // 36
+  {t:'PARA 1001', b:'<p>Đã sinh 1 lần đủ tháng (từ 37 tuần), không sinh non, không sảy/nạo, 1 con đang sống.</p>'},
+  // 37
+  {t:'PARA 2011', b:'<p>Đã sinh 2 lần đủ tháng, không sinh non, sảy/nạo 1 lần, 1 con đang sống.</p>'},
+  // 38
+  {t:'PARA 0102', b:'<p>Chưa sinh đủ tháng lần nào, sinh non 1 lần (ví dụ: song thai 36 tuần), không sảy/nạo, 2 con đang sống.</p><div class="ex">Ví dụ: Sinh thường song thai 36 tuần năm 2015. Không sảy/nạo.</div>'},
+  // 39
+  {t:'PARA 1011', b:'<p>Đã sinh 1 lần đủ tháng, không sinh non, sảy/nạo 1 lần, 1 con đang sống.</p>'},
+  // 40
+  {t:'KCC – Kinh cuối cùng', b:'<p><strong>KCC là ngày ĐẦU TIÊN của kỳ kinh gần nhất – không phải ngày cuối.</strong></p><p>Hỏi: "Kỳ kinh lần cuối bắt đầu ngày nào ạ?"</p><div class="warn">Nếu KH không nhớ chính xác: ghi "KCC: khoảng đầu tháng 05/2026 (KH không nhớ chính xác)" – không để trống.</div><div class="ex">KCC: 20/05/2026. &nbsp; hoặc &nbsp; LMP: 20/05/2026.</div>'},
+  // 41
+  {t:'Vòng kinh', b:'<p>Cách từ ngày đầu kỳ này đến kỳ sau. Bình thường: 28–35 ngày.</p><p>Hỏi: "Thường cách bao nhiêu ngày thì có kinh lại? Có đều không?"</p><div class="ex">Kinh nguyệt đều, chu kỳ 28–30 ngày.<br>Kinh nguyệt không đều, chu kỳ 1–3 tháng.</div>'},
+  // 42
+  {t:'Số ngày hành kinh', b:'<p>Bình thường: 3–7 ngày. Hỏi: "Mỗi lần có kinh mấy ngày mới hết?"</p><div class="ex">Hành kinh 4–5 ngày.<br>Rong kinh (hành kinh trên 7 ngày).</div>'},
+  // 43
+  {t:'Lượng kinh', b:'<p>Đánh giá qua số BVS thay mỗi ngày. Hỏi: "Mỗi ngày có kinh thay bao nhiêu miếng băng?"</p><div class="ex">Lượng vừa (3–4 BVS/ngày), không máu cục.<br>Ra nhiều (8–10 BVS/ngày), có máu cục.</div>'},
+  // 44
+  {t:'Đau bụng kinh', b:'<p>Hỏi: "Khi có kinh chị có bị đau bụng không? Mức độ đau như thế nào, có cần uống giảm đau không?"</p><div class="ex">Không đau bụng khi hành kinh.<br>Đau bụng nhiều khi hành kinh – uống thuốc giảm đau.</div>'},
+  // 45
+  {t:'Soi tươi + vi nấm', b:'<p>Mục đích: xét nghiệm VIÊM. Kiểm tra trực tiếp dịch âm đạo dưới kính hiển vi.</p><p>Phát hiện: nấm Candida, vi khuẩn, Trichomonas.</p><p>Kết quả: trong 30–60 phút – KH có thể chờ trong ca.</p><p>Chỉ định: hầu hết các trường hợp ra khí hư bất thường.</p><div class="tip">KHÔNG phải tầm soát ung thư CTC.</div>'},
+  // 46
+  {t:'PCR 14 tác nhân', b:'<p>Tìm 14 loại vi khuẩn/ký sinh trùng STI bằng kỹ thuật PCR từ dịch âm đạo.</p><p>Bao gồm: Chlamydia – Lậu – Mycoplasma – Ureaplasma – Gardnerella – Trichomonas – GBS – Candida – HSV-1/2 – Giang mai.</p><p><strong>Chỉ định:</strong> Khí hư vàng/xanh – Nghi STI – QHTD nguy cơ – Soi tươi âm tính mà vẫn có triệu chứng – Hiếm muộn/tiền hôn nhân (bắt buộc dù không có triệu chứng).</p><div class="warn"><strong>Chlamydia và lậu thường không có triệu chứng nhưng gây vô sinh thứ phát.</strong></div>'},
+  // 47
+  {t:'HPV + Thinprep – Tầm soát UTCTC', b:'<p><strong>HPV (40 chủng):</strong> Tìm virus HPV gây UTCTC và sùi mào gà. Kết quả 3–5 ngày.</p><p><strong>Thinprep:</strong> Kiểm tra hình thái tế bào CTC. Kết quả 3–5 ngày.</p><p>Nên làm bộ đôi HPV + Thinprep để đánh giá toàn diện.</p><p><strong>HPV type 16, 18 (+) → bắt buộc soi CTC ngay.</strong></p><p><strong>HPV type 18 (+) → thêm tế bào học ống CTC.</strong></p><div class="tip">Nếu KH từ chối: ghi "BS đã tư vấn nhưng KH chưa đồng ý làm" vào hồ sơ.</div>'},
+  // 48
+  {t:'Thai sớm – dưới 10 tuần', b:'<p>SA xác nhận thai trong TC. Nếu chưa thấy túi ối → chỉ định betaHCG và loại trừ GEU.</p><p>Dặn KH: đặt mỏ vịt KHÔNG ảnh hưởng thai.</p><p>Thuốc: Vitamin tổng hợp + Sắt + Acid folic + DHA.</p>'},
+  // 49
+  {t:'Mốc 11t5n – 13t6n – Quan trọng nhất', b:'<p><strong>XN bắt buộc:</strong></p><ul><li>SA 5D – đo độ mờ da gáy</li><li>Sàng lọc tiền sản giật quý I: XN máu PlGF + đo HA 2 tay + SA xung ĐM tử cung</li><li>NIPT hoặc Double Test (nếu chưa làm)</li><li>HBsAg + TPHA + HIV</li><li>TORCH: CMV + Rubella + Toxoplasma (IgG + IgM)</li></ul><div class="warn"><strong>IgM (+) = nhiễm cấp tính đang xảy ra → nguy cơ dị tật thai → báo BS ngay để hội chẩn.</strong><br>IgG (+) = đã có miễn dịch → an toàn.</div><p>Đo HA 2 tay. Bắt đầu thêm Canxi từ mốc này.</p>'},
+  // 50
+  {t:'Mốc 21–23 tuần', b:'<p>SA 5D + đo CTC âm đạo. TPNT nước tiểu.</p><p><strong>In và đưa KH tờ hướng dẫn nghiệm pháp đường ngay lần này</strong> để KH chuẩn bị cho lần tới (25–27 tuần).</p><p>Tư vấn tiêm uốn ván mũi 1.</p>'},
+  // 51
+  {t:'Mốc 25–27 tuần – Nghiệm pháp đường', b:'<p><strong>QUAN TRỌNG: Dặn KH nhịn ăn từ 20h tối hôm trước, chỉ uống nước lọc.</strong></p><p>Nghiệm pháp dung nạp glucose: lấy máu 3 lần – 0 phút, 60 phút, 120 phút. Uống 75g glucose trong 5 phút sau lần lấy máu đầu tiên.</p><p>KH không được rời phòng khám trong thời gian chờ.</p><p>Thêm: TPNT nước tiểu + Bộ sinh hoá máu cơ bản.</p>'},
+  // 52
+  {t:'Mốc 34 tuần – GBS', b:'<p>Cấy dịch âm đạo tìm liên cầu khuẩn B (GBS) + kháng sinh đồ – bắt buộc.</p><p>Mẹ mang GBS không có triệu chứng nhưng lây cho trẻ qua đường sinh → nhiễm khuẩn huyết, viêm màng não sơ sinh.</p><div class="warn"><strong>GBS (+) → điều trị kháng sinh ngay theo kháng sinh đồ dù mẹ không có triệu chứng.</strong></div>'},
+  // 53
+  {t:'Từ 36 tuần – Monitor thường quy', b:'<p>SA 2D + Monitor thường quy từ 36 tuần mỗi lần khám. TPNT nước tiểu mỗi lần.</p><p>Tần suất: mỗi tuần khám 1 lần nếu chưa sinh.</p><p>Dặn đến viện NGAY khi: rỉ ối, vỡ ối, cơn co TC, ra nhầy hồng.</p><div class="warn"><strong>AFI ≤80mm → báo BS – chỉ định Monitor + SA lại sau 3 ngày.</strong></div>'},
+  // 54
+  {t:'XN bắt buộc nhịn ăn', b:'<p><strong>Phải nhịn ăn ít nhất 8 tiếng:</strong></p><ul><li>Glucose lúc đói (đường huyết)</li><li>Nghiệm pháp dung nạp glucose (nhịn từ 20h tối hôm trước)</li><li>Bộ mỡ máu: Cholesterol – LDL – HDL – Triglycerid</li></ul><div class="warn">Không nhịn ăn → kết quả mất giá trị hoàn toàn, đặc biệt Triglycerid.</div>'},
+  // 55
+  {t:'XN không cần nhịn ăn', b:'<p><strong>Không cần nhịn ăn:</strong> CTM – Nhóm máu – Ferritin – Đông máu cơ bản – HbA1c – Men gan (AST, ALT) – Bilirubin – Albumin – Chức năng thận (Ure, Creatinin) – Điện giải – CRP – TSH/FT3/FT4 – D-dimer – Acid Uric – Canxi.</p><div class="tip">Nước tiểu: lấy GIỮA DÒNG buổi sáng. Cấy nước tiểu: không dùng kháng sinh ít nhất 48 tiếng trước.</div>'},
+  // 56
+  {t:'KH / BS / PK', b:'<p>KH = Khách hàng (cách gọi chính tại Phụ Sản 1, ưu tiên dùng nhất quán trong 1 hồ sơ).<br>BS = Bác sĩ.<br>PK = Phòng khám.</p><div class="ex">KH cho biết ngứa từ 5 ngày nay.<br>BS đã tư vấn nhưng KH từ chối.<br>Đã soi CTC tại PK khác (03/2026).</div>'},
+  // 57
+  {t:'AH / AĐ / CTC / TC / 2PP', b:'<p>5 mục kết quả khám phụ khoa – luôn viết tắt và luôn ghi theo đúng thứ tự này.</p><div class="ex">AH: Bình thường.<br>AĐ: Khí hư màu vàng đục, lượng vừa.<br>CTC: Lộ tuyến 2 môi từ 1h–5h.<br>TC: Kích thước bình thường, cơ đồng nhất.<br>2PP: Không sờ thấy khối.</div>'},
+  // 58
+  {t:'KCC / LMP – Lưu ý ghi ngày', b:'<p>KCC = Kinh Cuối Cùng = ngày ĐẦU của kỳ kinh gần nhất (không phải ngày cuối).</p><div class="warn">Phải ghi đủ ngày/tháng/năm. "KCC: 20/5" là SAI vì thiếu năm.<br>Đúng: "KCC: 20/05/2026."</div>'},
+  // 59
+  {t:'PARA – Ghi đủ ý nghĩa', b:'<p>Sau khi ghi PARA, viết thêm 1 câu giải thích ngắn để hồ sơ rõ ràng.</p><div class="ex">PARA 1001: Sinh thường 1 lần (2022, đủ tháng), 1 con sống.<br>PARA 0102: Sinh thường song thai 36 tuần (2015), 2 con sống.</div>'},
+  // 60
+  {t:'BVS / BPTT / BCS / DCTC', b:'<p>BVS = Băng vệ sinh – dùng khi đánh giá lượng kinh.<br>BPTT = Biện pháp tránh thai.<br>BCS = Bao cao su.<br>DCTC = Dụng cụ tử cung (vòng tránh thai).</p><div class="ex">BPTT: BCS.<br>Đã đặt DCTC từ 2020, hiện còn dùng.<br>Ra nhiều (trên 5 BVS/ngày).</div>'},
+  // 61
+  {t:'QHTD / UTCTC / TSG / GEU', b:'<p>QHTD = Quan hệ tình dục.<br>UTCTC = Ung thư cổ tử cung.<br>TSG = Tiền sản giật.<br>GEU = Thai ngoài tử cung (Grossesse Extra-Utérine).</p><div class="ex">Kiêng QHTD trong thời gian dùng thuốc.<br>Chưa tầm soát UTCTC.<br>Nghi GEU → báo BS ngay.</div>'},
+  // 62
+  {t:'XN / KQXN / GPB / HA / CTM', b:'<p>XN = Xét nghiệm.<br>KQXN = Kết quả xét nghiệm.<br>GPB = Giải phẫu bệnh.<br>HA = Huyết áp.<br>CTM = Công thức máu.</p><div class="ex">Chờ KQXN HPV + Thinprep – khi có kết quả PK sẽ liên hệ.<br>HA: 120/80 mmHg.<br>CTM: Hb 11 g/dL.</div>'},
+  // 63
+  {t:'BT – Buồng trứng (dùng có điều kiện)', b:'<p>BT viết hoa = Buồng trứng – ĐƯỢC PHÉP khi đứng trước mô tả cụ thể.</p><div class="ex">BT phải: nang đơn thuần 25mm, thành mỏng, dịch trong.<br>BT trái: bình thường.</div><div class="warn">bt / bth đứng một mình trong mục AH/AD/TC/2PP → SAI.<br>"2PP: bt" là sai vì mơ hồ.</div>'},
+  // 64
+  {t:'ko / k – Tại sao sai', b:'<p>Là ngôn ngữ chat, không có nghĩa chuẩn trong y tế. Hồ sơ bệnh án là tài liệu pháp lý – không được dùng ngôn ngữ chat dưới bất kỳ hình thức nào.</p><div class="warn">Sai: "KH ko đau"<br>Đúng: "KH không đau"</div>'},
+  // 65
+  {t:'dc / đc – Tại sao sai', b:'<p>Người đọc không hiểu ngay, có thể gây nhầm lẫn.</p><div class="warn">Sai: "kiêng dc rồi"<br>Đúng: "KH đã kiêng QHTD"</div>'},
+  // 66
+  {t:'vs – Tại sao sai', b:'<p>Trong y tế, "vs" là viết tắt của "versus" (đối lập). Dùng "vs" thay cho "với" gây hiểu nhầm nghiêm trọng trong hồ sơ.</p><div class="warn">Sai: "tránh thai vs BCS"<br>Đúng: "Tránh thai bằng BCS."</div>'},
+  // 67
+  {t:'bt / bth đứng một mình – Tại sao sai', b:'<p>"bt" có thể là: bình thường, bất thường, buồng trứng, bất tỉnh... Người đọc không thể đoán được ý nghĩa.</p><div class="warn">Sai: "AH: bt" – "2PP: bth"<br>Đúng: "AH: Bình thường." – "2PP: Không sờ thấy khối."</div>'},
+  // 68
+  {t:'lt – Tại sao sai', b:'<p>"lt" có thể là: lộ tuyến, lễ tân, lao tâm, liều thuốc... Không rõ nghĩa trong hồ sơ.</p><div class="warn">Sai: "CTC: lt ~7mm"<br>Đúng: "CTC: Lộ tuyến ~7mm, viêm 2 môi."</div>'},
+  // 69
+  {t:'Ngày tháng thiếu năm – Tại sao sai', b:'<p>Hồ sơ bệnh án được lưu trữ nhiều năm. Thiếu năm gây nhầm lẫn khi tra cứu hồ sơ cũ.</p><div class="warn">Sai: "KCC: 20/5" – "Tái khám: 19/6"<br>Đúng: "KCC: 20/05/2026." – "Tái khám: 19/06/2026."</div>'},
+  // 70
+  {t:'nang 2 phân – Tại sao sai', b:'<p>"Phân" (phân tây = cm) không phải đơn vị y tế chuẩn. Đơn vị siêu âm là mm.</p><div class="warn">Sai: "nang 2 phân" – "CTC: 3.2cm"<br>Đúng: "Nang 20mm." – "CTC dài 32mm."</div>'},
+  {t:'EDTA K2/K3 – Ống tím', b:'<p>Dùng để làm <strong>Công thức máu (CTM)</strong>. Chất chống đông EDTA giữ nguyên hình dạng tế bào máu để đếm và phân tích.</p><p>Kết quả: trong ca (1–2 tiếng).</p><div class="ex">CTM: Hb 11 g/dL · Hct 33% · WBC 8.5 · PLT 220.</div>'},
+  {t:'Serum / SST – Ống vàng hoặc đỏ', b:'<p>Dùng cho hầu hết <strong>XN sinh hoá</strong>. Máu để đông tự nhiên, ly tâm lấy huyết thanh (serum).</p><p><strong>XN thường gặp:</strong></p><ul><li>Gan: AST · ALT · Bilirubin · Albumin</li><li>Thận: Ure · Creatinin · Acid Uric</li><li>Mỡ máu (nhịn ăn): Cholesterol · LDL · HDL · Triglycerid</li><li>Nội tiết: TSH · FT3/FT4 · FSH · LH · Estradiol · AMH · Prolactin · betaHCG</li><li>Chỉ điểm ung thư: CA 125 · CA 15-3 · CEA · AFP · ...</li><li>HbA1c · CRP · ...</li></ul>'},
+  {t:'Lithium Heparin – Ống xanh lá', b:'<p>Dùng để lấy mẫu <strong>betaHCG</strong>. Heparin là chất chống đông, cho phép ly tâm nhanh lấy huyết tương (plasma).</p><p>Kết quả betaHCG: trong ca (1–2 tiếng).</p>'},
+  {t:'Citrate – Ống xanh dương', b:'<p>Dùng để làm <strong>đông máu</strong>. Tỉ lệ máu:citrate phải đúng 9:1 – lấy không đủ máu → kết quả sai.</p><p><strong>XN đông máu:</strong> PT · APTT · Fibrinogen.</p><p>Kết quả: 2–4 tiếng.</p><div class="warn">Lấy không đủ máu đến vạch → kết quả không có giá trị.</div>'},
+  {t:'Glucose / Fluoride – Ống xám', b:'<p>Dùng để đo <strong>đường huyết lúc đói</strong>. Fluoride ức chế quá trình đường phân, giữ ổn định nồng độ glucose trong mẫu.</p><div class="warn">Bắt buộc nhịn ăn ít nhất 8 tiếng trước khi lấy mẫu.</div>'}
+];
+
+function pop(i) {
+  var d = DATA[i];
+  if (!d) return;
+  document.getElementById('ptitle').textContent = d.t;
+  document.getElementById('pbody').innerHTML = d.b;
+  document.getElementById('ov').classList.add('open');
+}
+function closeOv(e) {
+  if (!e || e.target === document.getElementById('ov') || (e.target && e.target.classList.contains('pcl'))) {
+    document.getElementById('ov').classList.remove('open');
+  }
+}
+document.addEventListener('keydown', function(e){ if(e.key==='Escape') document.getElementById('ov').classList.remove('open'); });
+
+var CARDS = [
+  {q:'5 mục kết quả khám phụ khoa theo đúng thứ tự bắt buộc?', a:'AH – AĐ – CTC – TC – 2PP'},
+  {q:'Mnemonic nhớ thứ tự AH–AĐ–CTC–TC–2PP?', a:'"Ăn Ăn Cua Tươi – Cùng Phụ huynh"'},
+  {q:'Mnemonic nhớ PARA?', a:'"Đủ tháng – Non tháng – Sảy/Nạo – Còn sống" (P–A–R–A)'},
+  {q:'PARA 2011 đọc như thế nào?', a:'Sinh đủ tháng 2 lần · sảy/nạo 1 lần · 1 con sống'},
+  {q:'PARA 0102 là trường hợp nào?', a:'Chưa sinh đủ tháng, sinh non 1 lần (VD: song thai 36t), 2 con sống'},
+  {q:'KCC là ngày nào trong kỳ kinh?', a:'Ngày ĐẦU TIÊN của kỳ kinh gần nhất – không phải ngày cuối'},
+  {q:'Lộ tuyến CTC có phải ung thư không?', a:'Không – lành tính. Nhưng không tự nói "không sao" với KH.'},
+  {q:'Khi KH hỏi "lộ tuyến có nghiêm trọng không?" → trả lời thế nào?', a:'"Bác sĩ thăm khám, đánh giá và giải thích cụ thể cho mình ạ." – Không nói "không sao", không nói "nghiêm trọng".'},
+  {q:'Soi tươi khác gì HPV + Thinprep?', a:'Soi tươi = XN viêm (kết quả trong ca). HPV + Thinprep = tầm soát UTCTC (3–5 ngày). Hai mục đích hoàn toàn khác nhau.'},
+  {q:'KH chưa QHTD → làm gì trước khi chuẩn bị dụng cụ khám?', a:'KHÔNG chuẩn bị mỏ vịt thường. Báo BS TRƯỚC khi vào khám.'},
+  {q:'3h của BS tương ứng với bên nào của KH?', a:'3h = phải BS = trái KH. Ghi nguyên văn "3h", không dịch.'},
+  {q:'Tuyến Bartholin nằm ở vị trí đồng hồ nào?', a:'4–5h và 7–8h (phía sau dưới môi lớn, 2 bên đối xứng)'},
+  {q:'Tuyến Bartholin làm nhiệm vụ gì? Khi viêm thì sao?', a:'Tiết dịch bôi trơn. Khi viêm: sưng đỏ, đau, nóng tại vị trí 4–5h hoặc 7–8h.'},
+  {q:'Môi bé là vị trí hay gặp tổn thương nào nhất ở âm hộ?', a:'Sùi mào gà (HPV) – hay gặp nhất ở môi bé so với các cấu trúc khác của âm hộ'},
+  {q:'Âm đạo chia thành mấy vùng khi BS mô tả? Kể tên?', a:'Thành trước/sau/bên T/bên P + 4 túi cùng (trước/sau/bên T/bên P)'},
+  {q:'Cùng đồ sau ấn đau phồng có khối → nghi bệnh gì?', a:'Nghi viêm vùng chậu hoặc áp xe cùng đồ. Ghi vào mục AĐ, báo BS.'},
+  {q:'IgM (+) trong bộ TORCH có nghĩa gì?', a:'Nhiễm cấp tính đang xảy ra → nguy cơ dị tật thai → báo BS ngay để hội chẩn'},
+  {q:'IgG (+) trong bộ TORCH có nghĩa gì?', a:'Đã có miễn dịch từ trước → an toàn cho thai'},
+  {q:'GBS (+) tuần 34 mà mẹ không có triệu chứng → xử trí?', a:'Điều trị kháng sinh ngay theo kháng sinh đồ. GBS lây cho trẻ qua đường sinh → nguy hiểm cho sơ sinh.'},
+  {q:'AFI ≤80mm → làm gì?', a:'Báo BS → chỉ định Monitor + SA lại sau 3 ngày. Đây là dấu hiệu thiểu ối.'},
+  {q:'Hiếm muộn có cần PCR 14 tác nhân dù không có triệu chứng?', a:'Có – bắt buộc. Chlamydia và lậu thường không triệu chứng nhưng gây viêm dính vòi trứng → vô sinh thứ phát.'},
+  {q:'"bt" và "BT" trong hồ sơ khác nhau thế nào?', a:'"BT phải: nang 25mm" → ĐÚNG (BT = Buồng trứng + mô tả). "2PP: bt" → SAI (mơ hồ, không rõ nghĩa).'},
+  {q:'Lý do khám ghi cái gì? Cho ví dụ đúng và sai.', a:'Ghi LỜI KH nói, không ghi chẩn đoán. SAI: "Viêm âm đạo". ĐÚNG: "Ra khí hư màu vàng từ 5 ngày nay".'},
+  {q:'Nghiệm pháp đường 25–27 tuần: dặn KH điều gì trước ngày xét nghiệm?', a:'Nhịn ăn từ 20h tối hôm trước, chỉ uống nước lọc. Không được rời phòng khám khi chờ lấy máu lần 2 và 3.'},
+  {q:'Cùng đồ sau ấn đau ghi vào mục nào trong kết quả khám?', a:'Mục AĐ – vì cùng đồ là 4 túi cùng của âm đạo, thuộc phần AĐ'},
+  {q:'Tại sao không được ghi "lt" trong hồ sơ?', a:'"lt" có thể là lộ tuyến, lễ tân, lao tâm, liều thuốc... Ghi đầy đủ: lộ tuyến'},
+  {q:'Tại sao "vs" không được dùng trong hồ sơ y tế?', a:'Trong y tế "vs" = versus (đối lập). Ghi đúng: "với"'},
+  {q:'HPV type 16 hoặc 18 dương tính → bước tiếp theo bắt buộc là gì?', a:'Soi CTC (Colposcopy) bắt buộc – không điều trị trước khi có kết quả soi và sinh thiết'},
+  {q:'Mốc khám thai nào quan trọng nhất và cần làm nhiều XN nhất?', a:'11 tuần 5 ngày – 13 tuần 6 ngày: SA 5D + Tiền sản giật Q1 + TORCH + HBsAg/TPHA/HIV + NIPT'},
+  {q:'Đặt mỏ vịt có ảnh hưởng đến thai không? Câu dặn chuẩn?', a:'Không ảnh hưởng. Câu chuẩn: "Đặt mỏ vịt KHÔNG ảnh hưởng đến thai ạ."'},
+  {q:'CI trong phụ khoa đánh giá mấy tiêu chí? Kể tên?', a:'3 tiêu chí: ① Độ mở lỗ CTC · ② Chất nhầy CTC · ③ Vị trí CTC. Mỗi tiêu chí 0–3 điểm → mã 3 chữ số.'},
+  {q:'CI 333 có nghĩa gì và xảy ra khi nào?', a:'CTC mở rộng + nhầy trong loãng kéo sợi dài + CTC cao mềm ngả trước → thời điểm RỤNG TRỨNG, dễ thụ thai nhất.'},
+  {q:'CI 000 gặp ở mấy thời điểm trong chu kỳ? Kể tên?', a:'2 thời điểm: (1) Sau hành kinh (ngày 5–6, đầu chu kỳ mới) và (2) Cuối pha hoàng thể (ngày 25–28, ngay trước kỳ kinh tiếp theo). Cùng CI 000 vì Estrogen đều thấp ở cả hai thời điểm.'},
+  {q:'Tại sao CI 333 là thời điểm dễ thụ thai nhất?', a:'Estrogen tăng đỉnh → lỗ CTC mở (tinh trùng đi qua dễ) + nhầy trong loãng kéo sợi (tinh trùng bơi dễ) + CTC cao mềm ngả trước (tiếp xúc tinh dịch tốt hơn).'},
+
+  // --- BÀI 2: QUY TRÌNH ---
+  {q:'Nhóm 3 đau bụng: cần hỏi thêm câu nào mà nhiều người hay bỏ sót?', a:'Tiền sử phẫu thuật vùng bụng chậu (mổ u nang, mổ ruột thừa...) – ảnh hưởng đến chẩn đoán phân biệt và nguy cơ dính sau mổ.'},
+  {q:'Nhóm 3 đau bụng: XN nào gần như bắt buộc?', a:'Siêu âm (gần như bắt buộc). Kèm: betaHCG · CRP · Công thức máu tùy tình huống.'},
+  {q:'Nhóm 4 tổn thương vùng kín: sau ca khám cần làm gì đặc biệt?', a:'Thay tấm lót bàn khám. Vệ sinh xe tiêm và bàn khám bằng gạc cồn. Đeo găng tay + khẩu trang. Phân loại chất thải đúng màu túi.'},
+  {q:'Nhóm 4: tại sao cần đảm bảo riêng tư tuyệt đối?', a:'Nhóm này liên quan bệnh lây qua đường tình dục – KH dễ xấu hổ, e ngại. Chỉ phụ khám và BS trong phòng. Dùng ngôn ngữ không phán xét.'},
+  {q:'Nhóm 1: khi nào cần thêm XN tổng phân tích nước tiểu?', a:'Khi KH có tiểu buốt, tiểu rắt, tiểu máu kèm theo. Kết quả trong ca.'},
+  {q:'Khi BS đã tư vấn HPV/Thinprep nhưng KH từ chối → ghi hồ sơ thế nào?', a:'Bắt buộc ghi: "BS đã tư vấn nhưng KH chưa đồng ý làm." – Không được để trống.'},
+  {q:'Ai chịu trách nhiệm follow kết quả XN của KH?', a:'Người phụ khám ca đó. Follow toàn bộ KH thuộc ca làm việc của mình. Giao ca cần bàn giao danh sách và trạng thái kết quả.'},
+  {q:'Nếu KH ra về mà chưa nghe kết luận → làm gì?', a:'Ghi chú đầy đủ kết luận và dặn dò của BS vào file kết quả XN theo dõi chung. Không để trống.'},
+
+  // --- BÀI 3: HỒ SƠ ---
+  {q:'Lý do khám "tái khám" có ghi được không?', a:'Không – phải ghi cụ thể hơn. VD: "Tái khám sau điều trị viêm âm đạo, còn ra khí hư vàng." Ghi nguyên văn lời KH.'},
+  {q:'Tiền sử HPV và tầm soát UTCTC hỏi như thế nào?', a:'"1–2 năm nay mình đã tầm soát ung thư CTC chưa? Đã tiêm HPV chưa?" – Gợi ý để BS tư vấn bổ sung nếu chưa tầm soát.'},
+  {q:'Tiền sử gia đình cần hỏi những bệnh gì?', a:'Tan máu bẩm sinh (Thalassemia) · Tiểu đường · Ung thư vú/buồng trứng – các bệnh có tính di truyền ảnh hưởng tư vấn cho KH.'},
+  {q:'Tại sao phải hỏi tiền sử dị ứng thuốc?', a:'Để tránh kê đơn thuốc KH đã từng dị ứng và xem có cần test dị ứng trước khi dùng không. VD: dị ứng Amoxicillin → không kê nhóm penicillin.'},
+  {q:'Với KH tái khám: bệnh sử cần ghi gì?', a:'TÓM TẮT lại quá trình điều trị lần trước (chẩn đoán, thuốc đã dùng, kết quả), rồi mới ghi diễn biến hiện tại.'},
+  {q:'Chu kỳ kinh ghi như thế nào cho đúng chuẩn?', a:'Ghi: "Kinh nguyệt đều, chu kỳ 30/5 ngày – KCC: 20/05/2026." Số trước là chu kỳ, số sau là số ngày hành kinh.'},
+
+  // --- BÀI 4: XÉT NGHIỆM ---
+  {q:'Mốc khám thai 16–18 tuần cần XN gì?', a:'SA 5D · CTM · Nhóm máu ABO-Rh · Đo CTC âm đạo.'},
+  {q:'Mốc 31–33 tuần cần XN gì?', a:'SA 5D · TPNT nước tiểu · Có thể cấy dịch AĐ tìm GBS (liên cầu khuẩn B).'},
+  {q:'Ống Citrate xanh dương: lỗi hay gặp nhất là gì?', a:'Lấy không đủ máu đến vạch – tỉ lệ máu:citrate phải đúng 9:1. Thiếu máu → kết quả PT/APTT/Fibrinogen không có giá trị.'},
+  {q:'Ống tím EDTA dùng cho XN gì?', a:'Công thức máu (CTM). Chất chống đông EDTA giữ nguyên hình dạng tế bào máu. Kết quả trong ca.'},
+  {q:'Ống xanh lá Lithium Heparin dùng cho XN gì tại Phụ Sản 1?', a:'betaHCG. Heparin cho phép ly tâm nhanh lấy huyết tương. Kết quả trong ca.'},
+
+  // --- THÁI ĐỘ / QUY TẮC ---
+  {q:'Lỗi thái độ hay gặp nhất của điều dưỡng mới là gì?', a:'Ngắt lời KH khi đang kể triệu chứng. Dùng từ chuyên môn khó hiểu. Quên chào khi KH ra về. Không nhớ tên KH tái khám.'},
+  {q:'Khi KH hỏi bệnh có nặng không → trả lời thế nào?', a:'"Bác sĩ sẽ thăm khám, đánh giá và giải thích cụ thể cho mình ạ." Không tự nhận xét bệnh nặng hay nhẹ.'},
+  {q:'Tiêu chí hoàn thành đào tạo Bài 2 là gì?', a:'Đạt ≥9/11 tiêu chí bảng kiểm thực hành + xử lý đúng ≥2/3 tình huống mô phỏng + thực hành ≥5 ca dưới giám sát.'},
+
+  // --- THUẬT NGỮ XÉT NGHIỆM ---
+  {q:'TPNT là viết tắt của gì? Trong thai kỳ cần chú ý chỉ số nào nhất?', a:'Tổng Phân Tích Nước Tiểu. Trong thai kỳ: Protein(+) + HA cao → nghi tiền sản giật → báo BS ngay. Lấy mẫu giữa dòng buổi sáng.'},
+  {q:'CRL là gì? Dùng để làm gì?', a:'Crown-Rump Length = Chiều dài đầu mông thai nhi. Đo trên SA quý 1 để tính tuổi thai chính xác hơn KCC.'},
+  {q:'AFI bình thường là bao nhiêu? Khi nào cần báo BS?', a:'Bình thường: 80–250mm. AFI ≤80mm = thiểu ối → báo BS ngay, chỉ định Monitor + SA lại sau 3 ngày.'},
+  {q:'GBS là gì? Tại sao nguy hiểm dù mẹ không có triệu chứng?', a:'Liên cầu khuẩn nhóm B – sống bình thường trong AĐ mẹ, không hại mẹ nhưng lây cho trẻ khi sinh → viêm màng não, nhiễm khuẩn huyết sơ sinh. GBS(+) → điều trị KS ngay.'},
+  {q:'ĐM tử cung là gì? SA Doppler đo gì?', a:'Động mạch tử cung – đường máu chính từ mẹ đến nhau thai. SA Doppler đo sức cản dòng chảy (PI). PI cao = máu chảy kém = nguy cơ tiền sản giật.'},
+  {q:'IgM(+) trong TORCH có nghĩa gì? IgG(+) có nghĩa gì?', a:'IgM = Mới nhiễm = đang nhiễm cấp tính → nguy hiểm cho thai → báo BS ngay. IgG = Ghi nhớ = đã có miễn dịch → an toàn.'},
+  {q:'TORCH gồm những bệnh gì?', a:'TO = Toxoplasma (ký sinh trùng phân mèo/thịt sống) · R = Rubella (sởi Đức) · C = CMV (Cytomegalovirus) · H = Herpes (HSV)'},
+  {q:'PlGF là gì? Kết quả thấp có nghĩa gì?', a:'Placental Growth Factor – yếu tố tăng trưởng nhau thai. Thấp = nhau thai phát triển kém = nguy cơ tiền sản giật cao. Làm ở mốc 11t5n–13t6n.'},
+
+  // --- XÉT NGHIỆM THEO NHÓM LÝ DO KHÁM ---
+  {q:'Nhóm 1 – Khí hư bất thường: XN nào làm TRƯỚC TIÊN và có kết quả trong ca?', a:'Soi tươi + vi nấm – kết quả trong 30–60 phút. Xác định nấm Candida, vi khuẩn, Trichomonas ngay trong ca.'},
+  {q:'Nhóm 1 – Khí hư: khi nào chỉ định PCR 14 tác nhân?', a:'Khí hư vàng/xanh có mủ · Nghi STI · Bạn tình có triệu chứng · Soi tươi âm tính nhưng vẫn còn triệu chứng · Hiếm muộn/tiền hôn nhân (bắt buộc dù không có triệu chứng).'},
+  {q:'Nhóm 1 – Khí hư: khi nào thêm XN nước tiểu?', a:'Khi KH có tiểu buốt, tiểu rắt hoặc tiểu máu kèm theo. TPNT – kết quả trong ca.'},
+  {q:'Nhóm 2 – Ra máu bất thường: 3 XN máu hay gặp nhất?', a:'betaHCG (nghi thai · GEU · dọa sảy) · Công thức máu CTM (đánh giá mức độ thiếu máu) · Đông máu cơ bản (ra máu nhiều hoặc trước thủ thuật).'},
+  {q:'Nhóm 2 – Ra máu: tại sao bắt buộc hỏi và làm betaHCG?', a:'Ra máu có thể là dấu hiệu GEU (chửa ngoài TC) hoặc dọa sảy. Nếu không kiểm tra → bỏ sót GEU → nguy hiểm tính mạng.'},
+  {q:'Nhóm 3 – Đau bụng dưới: XN nào gần như bắt buộc?', a:'Siêu âm (gần như bắt buộc). Kèm: betaHCG (loại trừ GEU) · CRP (đánh giá viêm) · CTM (đánh giá nhiễm trùng).'},
+  {q:'Nhóm 3 – Đau bụng: nếu kèm khí hư bất thường thêm XN gì?', a:'Soi tươi + vi nấm · PCR 14 tác nhân STI. Đau bụng + khí hư mủ → nghi viêm vùng chậu PID.'},
+  {q:'Nhóm 4 – Tổn thương vùng kín: 2 nhóm XN chính?', a:'Nhóm 1 – Tìm HPV và STI: HPV · PCR 14 tác nhân (Chlamydia, lậu, Herpes...). Nhóm 2 – Tầm soát lây qua máu/tình dục: HIV · HBsAg (viêm gan B) · TPHA (giang mai).'},
+  {q:'Nhóm 5 – Khám thai: mốc nào cần làm NHIỀU XN nhất?', a:'Mốc 11t5n–13t6n: SA 5D + Tiền sản giật Q1 (PlGF + HA 2 tay + Doppler ĐM TC) + TORCH (CMV/Toxo/Rubella IgG+IgM) + HBsAg/TPHA/HIV + NIPT.'},
+  {q:'Nhóm 5 – Khám thai: mốc nào cần nhịn ăn từ 20h tối hôm trước?', a:'Mốc 24–28 tuần – Nghiệm pháp dung nạp glucose 75g (lấy máu 3 lần: 0 phút / 60 phút / 120 phút). Không nhịn → kết quả vô giá trị.'},
+  {q:'Nhóm 5 – Khám thai: TPNT nước tiểu bắt đầu làm từ mốc nào?', a:'Từ mốc 22 tuần – làm mỗi lần khám trở đi. Đặc biệt chú ý Protein(+) kèm HA cao → nghi tiền sản giật.'},
+  {q:'Phân biệt: Soi tươi vs HPV+Thinprep vs PCR 14 – mỗi cái dùng khi nào?', a:'Soi tươi = XN viêm (kết quả trong ca, dùng khi có khí hư bất thường). HPV+Thinprep = tầm soát UTCTC (3–5 ngày, không phải XN viêm). PCR 14 = tìm STI cụ thể (3–5 ngày, dùng khi nghi lây qua đường tình dục).'}
+];
+var cur=0;
+function renderCard(){
+  document.getElementById('fcard').classList.remove('flip');
+  document.getElementById('fq').textContent=CARDS[cur].q;
+  document.getElementById('fa').textContent=CARDS[cur].a;
+  document.getElementById('fctr').textContent=(cur+1)+' / '+CARDS.length;
+}
+function flipCard(){document.getElementById('fcard').classList.toggle('flip');}
+function nextCard(){cur=(cur+1)%CARDS.length;renderCard();}
+function prevCard(){cur=(cur-1+CARDS.length)%CARDS.length;renderCard();}
+renderCard();
+</script>
+
+<!-- PHỤ LỤC -->
+<div class="page" id="page-phuluc">
+
+<div class="slabel">Tam cá nguyệt – 3 giai đoạn thai kỳ</div>
+<div style="background:#fff;border:1px solid #e2ddd4;border-radius:10px;padding:16px;margin-bottom:12px">
+<p style="font-size:13px;color:#5a5650;margin-bottom:12px">Thai kỳ bình thường kéo dài <strong>40 tuần</strong> (tính từ ngày đầu KCC), chia làm 3 giai đoạn gọi là <strong>tam cá nguyệt</strong> (mỗi giai đoạn khoảng 3 tháng):</p>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:14px">
+  <div style="background:#e1f5ee;border:1px solid #9fe1cb;border-radius:10px;padding:14px">
+    <div style="font-size:11px;font-weight:600;color:#0f6e56;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Tam cá nguyệt 1</div>
+    <div style="font-size:16px;font-weight:600;color:#085041;margin-bottom:4px">Tuần 1 – 13</div>
+    <div style="font-size:12px;color:#1d9e75;margin-bottom:8px">3 tháng đầu</div>
+    <ul style="font-size:12px;color:#5a5650;padding-left:16px;line-height:1.8">
+      <li>Thai hình thành và bám vào TC</li>
+      <li>Các cơ quan bắt đầu hình thành</li>
+      <li>Mẹ hay buồn nôn, mệt mỏi, ngực căng</li>
+      <li>Nguy cơ sảy thai cao nhất</li>
+      <li>Chưa thấy bụng to từ bên ngoài</li>
+    </ul>
+  </div>
+  <div style="background:#eeedfe;border:1px solid #afa9ec;border-radius:10px;padding:14px">
+    <div style="font-size:11px;font-weight:600;color:#534ab7;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Tam cá nguyệt 2</div>
+    <div style="font-size:16px;font-weight:600;color:#3c3489;margin-bottom:4px">Tuần 14 – 27</div>
+    <div style="font-size:12px;color:#534ab7;margin-bottom:8px">3 tháng giữa</div>
+    <ul style="font-size:12px;color:#5a5650;padding-left:16px;line-height:1.8">
+      <li>Giai đoạn thoải mái nhất của mẹ</li>
+      <li>Buồn nôn giảm, mẹ ăn được hơn</li>
+      <li>Mẹ bắt đầu cảm nhận thai máy (18–20t)</li>
+      <li>Bụng bắt đầu nhô rõ</li>
+      <li>SA 5D hình thái thai nhi rõ nhất (20–24t)</li>
+    </ul>
+  </div>
+  <div style="background:#faece7;border:1px solid #f0997b;border-radius:10px;padding:14px">
+    <div style="font-size:11px;font-weight:600;color:#993c1d;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Tam cá nguyệt 3</div>
+    <div style="font-size:16px;font-weight:600;color:#712b13;margin-bottom:4px">Tuần 28 – 40</div>
+    <div style="font-size:12px;color:#993c1d;margin-bottom:8px">3 tháng cuối</div>
+    <ul style="font-size:12px;color:#5a5650;padding-left:16px;line-height:1.8">
+      <li>Thai tăng cân nhanh, phổi hoàn thiện</li>
+      <li>Mẹ khó ngủ, đau lưng, phù chân</li>
+      <li>Bắt đầu monitor từ tuần 36</li>
+      <li>Dấu hiệu chuyển dạ sắp xảy ra</li>
+      <li>Sinh đủ tháng: từ 37 tuần</li>
+    </ul>
+  </div>
+</div>
+<div style="background:#f0ede6;border-radius:8px;padding:10px 14px;font-size:12px;color:#5a5650">
+  <strong>Ghi nhớ nhanh:</strong> TCN1 = hình thành · TCN2 = phát triển · TCN3 = hoàn thiện và chuẩn bị chào đời
+</div>
+</div>
+
+<div class="slabel">Các mốc khám thai – toàn bộ từ đầu đến cuối thai kỳ</div>
+<table class="tbl" style="margin-bottom:12px">
+  <thead><tr><th>Tuần</th><th>Tên mốc</th><th>Việc quan trọng nhất</th></tr></thead>
+  <tbody>
+    <tr><td class="trm">&lt;8 tuần</td><td>Thai sớm</td><td>Xác nhận thai trong TC · Loại trừ GEU · Uống Sắt + Acid folic + DHA ngay</td></tr>
+    <tr><td class="trm">10 tuần</td><td>Tư vấn NIPT</td><td>SA 2D · Tư vấn NIPT (xét nghiệm sàng lọc dị tật gen từ máu mẹ)</td></tr>
+    <tr><td class="trm" style="color:#0f6e56">11t5n–13t6n</td><td style="color:#0f6e56">Sàng lọc quý 1 ⭐</td><td>SA 5D đo độ mờ da gáy · Tiền sản giật Q1 · TORCH · HBsAg/TPHA/HIV · Bắt đầu Canxi</td></tr>
+    <tr><td class="trm">16–18 tuần</td><td>Giữa quý 2</td><td>SA 5D · CTM · Nhóm máu · Đo CTC âm đạo · Tiêm uốn ván mũi 1 (nếu chưa tiêm)</td></tr>
+    <tr><td class="trm">22 tuần</td><td>Hình thái thai nhi</td><td>SA 5D kiểm tra hình thái toàn diện · TPNT nước tiểu · In giấy hướng dẫn nghiệm pháp đường</td></tr>
+    <tr><td class="trm" style="color:#a32d2d">24–28 tuần</td><td style="color:#a32d2d">Nghiệm pháp đường ⭐</td><td>NHỊN ĂN từ 20h · Lấy máu 3 lần · SA 2D/5D · Sinh hoá máu · Tiêm uốn ván mũi 2</td></tr>
+    <tr><td class="trm">31–33 tuần</td><td>Quý 3 sớm</td><td>SA 5D · TPNT · Có thể cấy dịch AĐ tìm GBS</td></tr>
+    <tr><td class="trm">34–36 tuần</td><td>Chuẩn bị sinh</td><td>SA 2D · TPNT · Cấy dịch AĐ tìm GBS bắt buộc · Monitor nếu có cơn gò</td></tr>
+    <tr><td class="trm">&gt;36 tuần</td><td>Theo dõi sát</td><td>Khám MỖI TUẦN · SA 2D + Monitor thường quy · Dặn dấu hiệu chuyển dạ</td></tr>
+    <tr><td class="trm" style="color:#a32d2d">37 tuần</td><td style="color:#a32d2d">Sinh đủ tháng</td><td>Từ đây sinh là đủ tháng. Theo dõi sát AFI · Nếu AFI ≤80 → báo BS ngay</td></tr>
+  </tbody>
+</table>
+
+<div class="slabel">Chỉ số bình thường cần nhớ</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-bottom:12px">
+  <div style="background:#fff;border:1px solid #e2ddd4;border-radius:10px;padding:14px">
+    <div style="font-size:12px;font-weight:600;color:#185fa5;margin-bottom:8px">Huyết áp</div>
+    <table style="width:100%;font-size:12px;border-collapse:collapse">
+      <tr><td style="padding:3px 0;color:#5a5650">Bình thường</td><td style="font-weight:600">90/60 – 120/80 mmHg</td></tr>
+      <tr><td style="padding:3px 0;color:#5a5650">Tăng HA nhẹ</td><td style="font-weight:600;color:#854f0b">130–139/80–89</td></tr>
+      <tr><td style="padding:3px 0;color:#5a5650">Tăng HA</td><td style="font-weight:600;color:#a32d2d">≥140/90 mmHg</td></tr>
+      <tr><td style="padding:3px 0;color:#5a5650">Nghi TSG</td><td style="font-weight:600;color:#a32d2d">≥140/90 + phù/đạm niệu</td></tr>
+    </table>
+  </div>
+  <div style="background:#fff;border:1px solid #e2ddd4;border-radius:10px;padding:14px">
+    <div style="font-size:12px;font-weight:600;color:#0f6e56;margin-bottom:8px">Hemoglobin (Hb)</div>
+    <table style="width:100%;font-size:12px;border-collapse:collapse">
+      <tr><td style="padding:3px 0;color:#5a5650">Phụ nữ bình thường</td><td style="font-weight:600">≥12 g/dL</td></tr>
+      <tr><td style="padding:3px 0;color:#5a5650">Thai phụ bình thường</td><td style="font-weight:600">≥11 g/dL</td></tr>
+      <tr><td style="padding:3px 0;color:#5a5650">Thiếu máu nhẹ</td><td style="font-weight:600;color:#854f0b">9–10.9 g/dL</td></tr>
+      <tr><td style="padding:3px 0;color:#5a5650">Thiếu máu nặng</td><td style="font-weight:600;color:#a32d2d">&lt;9 g/dL</td></tr>
+    </table>
+  </div>
+  <div style="background:#fff;border:1px solid #e2ddd4;border-radius:10px;padding:14px">
+    <div style="font-size:12px;font-weight:600;color:#993c1d;margin-bottom:8px">Tim thai</div>
+    <table style="width:100%;font-size:12px;border-collapse:collapse">
+      <tr><td style="padding:3px 0;color:#5a5650">Bình thường</td><td style="font-weight:600">120–160 nhịp/phút</td></tr>
+      <tr><td style="padding:3px 0;color:#5a5650">Nhịp chậm</td><td style="font-weight:600;color:#a32d2d">&lt;120 nhịp/phút → báo BS</td></tr>
+      <tr><td style="padding:3px 0;color:#5a5650">Nhịp nhanh</td><td style="font-weight:600;color:#a32d2d">&gt;160 nhịp/phút → báo BS</td></tr>
+      <tr><td style="padding:3px 0;color:#5a5650">Nghe được từ</td><td style="font-weight:600">Tuần 10–12 (Doppler)</td></tr>
+    </table>
+  </div>
+  <div style="background:#fff;border:1px solid #e2ddd4;border-radius:10px;padding:14px">
+    <div style="font-size:12px;font-weight:600;color:#534ab7;margin-bottom:8px">Đường huyết lúc đói</div>
+    <table style="width:100%;font-size:12px;border-collapse:collapse">
+      <tr><td style="padding:3px 0;color:#5a5650">Bình thường</td><td style="font-weight:600">&lt;5.1 mmol/L</td></tr>
+      <tr><td style="padding:3px 0;color:#5a5650">TĐTK (lúc đói)</td><td style="font-weight:600;color:#a32d2d">≥5.1 mmol/L</td></tr>
+      <tr><td style="padding:3px 0;color:#5a5650">TĐTK (sau 1h)</td><td style="font-weight:600;color:#a32d2d">≥10.0 mmol/L</td></tr>
+      <tr><td style="padding:3px 0;color:#5a5650">TĐTK (sau 2h)</td><td style="font-weight:600;color:#a32d2d">≥8.5 mmol/L</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="slabel">Dấu hiệu thai phụ cần đến viện NGAY</div>
+<div style="background:#fcebeb;border:1px solid #f7c1c1;border-radius:10px;padding:14px;margin-bottom:12px">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px">
+    <div>
+      <div style="font-size:12px;font-weight:600;color:#a32d2d;margin-bottom:6px">🚨 Gọi 115 hoặc đến cấp cứu ngay</div>
+      <ul style="font-size:12px;color:#5a5650;padding-left:16px;line-height:1.9">
+        <li>Đau bụng dữ dội không giảm</li>
+        <li>Ra máu ồ ạt</li>
+        <li>Vỡ ối (nước chảy không kiểm soát)</li>
+        <li>Thai không máy trên 12 tiếng (từ tuần 28)</li>
+        <li>Co giật, mờ mắt, đau đầu dữ dội</li>
+        <li>Mặt tái, lạnh mồ hôi, HA tụt</li>
+      </ul>
+    </div>
+    <div>
+      <div style="font-size:12px;font-weight:600;color:#854f0b;margin-bottom:6px">⚠️ Liên hệ phòng khám sớm trong ngày</div>
+      <ul style="font-size:12px;color:#5a5650;padding-left:16px;line-height:1.9">
+        <li>Ra máu ít màu nâu/hồng</li>
+        <li>Rỉ ối (ẩm ướt liên tục không giải thích được)</li>
+        <li>Phù mặt, tay chân tăng nhanh bất thường</li>
+        <li>Sốt trên 38°C</li>
+        <li>Thai máy yếu hơn thường lệ</li>
+        <li>Cơn gò đều đặn trước 37 tuần</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="slabel">Thuật ngữ hay gặp – giải thích nhanh</div>
+<table class="tbl" style="margin-bottom:12px">
+  <thead><tr><th>Thuật ngữ</th><th>Nghĩa đơn giản</th></tr></thead>
+  <tbody>
+    <tr><td class="trm">AFI</td><td>Chỉ số ối – đo tổng lượng nước ối. AFI ≤80mm = thiểu ối → báo BS</td></tr>
+    <tr><td class="trm">GEU</td><td>Thai ngoài tử cung – thai bám ngoài buồng TC (thường ở vòi trứng) → cấp cứu ngoại khoa</td></tr>
+    <tr><td class="trm">NIPT</td><td>Xét nghiệm sàng lọc dị tật gen từ máu mẹ (không xâm lấn). Phát hiện hội chứng Down, Edward, Patau...</td></tr>
+    <tr><td class="trm">TORCH</td><td>Bộ xét nghiệm 4 bệnh nguy hiểm cho thai: Toxoplasma · Rubella (sởi Đức) · CMV · Herpes. IgM(+) = nhiễm cấp → báo BS ngay</td></tr>
+    <tr><td class="trm">GBS</td><td>Liên cầu khuẩn nhóm B – vi khuẩn trong AĐ mẹ, không gây bệnh cho mẹ nhưng lây cho trẻ khi sinh → nguy hiểm cho sơ sinh</td></tr>
+    <tr><td class="trm">Monitor sản khoa</td><td>Máy theo dõi tim thai và cơn gò TC. Dùng từ tuần 36 thường quy hoặc khi có cơn gò sớm</td></tr>
+    <tr><td class="trm">Macrosomia</td><td>Thai to – cân nặng ước tính trên 4000g. Hay gặp khi mẹ tiểu đường thai kỳ</td></tr>
+    <tr><td class="trm">PlGF</td><td>Yếu tố tăng trưởng nhau thai – XN máu dự báo tiền sản giật quý 1. Thấp → nguy cơ TSG cao</td></tr>
+    <tr><td class="trm">Spinnbarkeit</td><td>Chất nhầy CTC kéo sợi dài – dấu hiệu đặc trưng của CI 333, thời điểm rụng trứng</td></tr>
+    <tr><td class="trm">Fourchette</td><td>Mép sau âm hộ – điểm gặp nhau của 2 môi bé ở phía dưới (gần hậu môn)</td></tr>
+    <tr><td class="trm">Bethesda</td><td>Hệ thống phân loại kết quả Thinprep: NILM (bình thường) → ASC-US → LSIL → HSIL → Carcinoma</td></tr>
+    <tr><td class="trm">PID</td><td>Viêm vùng chậu (Pelvic Inflammatory Disease) – viêm lan từ AĐ/CTC lên TC và phần phụ</td></tr>
+    <tr><td class="trm">CRL</td><td><strong>C</strong>rown-<strong>R</strong>ump <strong>L</strong>ength = Chiều dài đầu mông. Đo từ đỉnh đầu đến mông thai (không tính chân) trên SA quý 1. Dùng để tính tuổi thai chính xác hơn KCC. Nhớ nhanh: "CRL = Chiều dài từ Crown (đầu) đến Rump (mông)"</td></tr>
+    <tr><td class="trm">CTM</td><td><strong>C</strong>ông <strong>T</strong>hức <strong>M</strong>áu (Complete Blood Count). Đo 3 nhóm: Hồng cầu (Hb, Hct) · Bạch cầu (WBC) · Tiểu cầu (PLT). Nhớ nhanh: "CTM = đếm toàn bộ tế bào trong máu"</td></tr>
+    <tr><td class="trm">GBS</td><td><strong>G</strong>roup <strong>B</strong> <strong>S</strong>treptococcus = Liên cầu khuẩn nhóm B. Vi khuẩn sống bình thường trong AĐ mẹ, không gây bệnh cho mẹ nhưng lây cho trẻ khi sinh → viêm màng não, nhiễm khuẩn huyết sơ sinh. Xét nghiệm ở mốc 34 tuần. GBS(+) → điều trị KS ngay dù mẹ không có triệu chứng.</td></tr>
+    <tr><td class="trm">AFI</td><td><strong>A</strong>mniotic <strong>F</strong>luid <strong>I</strong>ndex = Chỉ số ối. Đo 4 túi ối ở 4 góc bụng trên SA, cộng lại. Bình thường: 80–250mm. AFI ≤80mm = thiểu ối → báo BS ngay, Monitor + SA lại sau 3 ngày. Nhớ nhanh: "AFI = Ối (Amniotic Fluid) có đủ không?"</td></tr>
+    <tr><td class="trm">ĐM tử cung</td><td>Động mạch tử cung (Uterine Artery). 2 động mạch chạy 2 bên TC, cung cấp máu chính cho TC và nhau thai. SA Doppler đo sức cản dòng chảy: PI cao = máu chảy kém = nguy cơ tiền sản giật. Nhớ nhanh: "ĐM tử cung = đường cao tốc máu từ mẹ đến nhau thai – Doppler đo xem có thông thoáng không"</td></tr>
+    <tr><td class="trm">PI</td><td>Pulsatility Index = Chỉ số đập mạch. Dùng trong SA Doppler ĐM tử cung. PI thấp = sức cản thấp = bình thường. PI cao = sức cản cao = máu đến nhau thai kém → nguy cơ TSG.</td></tr>
+    <tr><td class="trm">CRL vs CCTC</td><td>Dễ nhầm: CRL = chiều dài đầu mông thai nhi (đo trên SA quý 1). CCTC = chiều cao tử cung (đo bằng thước dây trên bụng mẹ từ quý 2). Hai chỉ số hoàn toàn khác nhau.</td></tr>
+    <tr><td class="trm">TPNT</td><td><strong>T</strong>ổng <strong>P</strong>hân <strong>T</strong>ích <strong>N</strong>ước <strong>T</strong>iểu (Urinalysis). Đo: Protein · Glucose · Bạch cầu · Hồng cầu · Nitrite · pH. Trong thai kỳ đặc biệt chú ý: Protein(+) + HA cao → nghi tiền sản giật → báo BS ngay. Lấy mẫu GIỮA DÒNG buổi sáng. Làm thường quy từ tuần 22 trở đi.</td></tr>
+  </tbody>
+</table>
+
+<div class="slabel">Bổ sung dinh dưỡng trong thai kỳ</div>
+<table class="tbl">
+  <thead><tr><th>Chất bổ sung</th><th>Thời điểm</th><th>Tác dụng</th></tr></thead>
+  <tbody>
+    <tr><td class="trm">Acid folic</td><td>Trước khi mang thai đến tuần 12</td><td>Ngăn ngừa dị tật ống thần kinh (não và cột sống)</td></tr>
+    <tr><td class="trm">Sắt</td><td>Từ khi phát hiện thai đến sau sinh</td><td>Phòng thiếu máu thiếu sắt cho mẹ và thai</td></tr>
+    <tr><td class="trm">DHA</td><td>Suốt thai kỳ và cho con bú</td><td>Phát triển não và mắt thai nhi</td></tr>
+    <tr><td class="trm">Canxi</td><td>Từ tuần 12–13 trở đi</td><td>Phát triển xương răng thai nhi · Phòng chuột rút mẹ</td></tr>
+    <tr><td class="trm">Vitamin tổng hợp</td><td>Suốt thai kỳ</td><td>Bổ sung toàn diện vi chất</td></tr>
+    <tr><td class="trm">Aspirin liều thấp</td><td>Tuần 12–16 (nếu nguy cơ TSG cao)</td><td>Giảm 50–60% nguy cơ tiền sản giật nặng</td></tr>
+  </tbody>
+</table>
+
+
+<div class="slabel">Phân loại rác thải y tế – Thông tư 20/2021/TT-BYT</div>
+<div style="background:#fff;border:1px solid #e2ddd4;border-radius:10px;padding:16px;margin-bottom:12px">
+<p style="font-size:12px;color:#5a5650;margin-bottom:14px">Căn cứ: <strong>Thông tư 20/2021/TT-BYT</strong> – có hiệu lực từ 10/01/2022. Phân loại ngay tại nơi phát sinh, bỏ đúng túi/thùng màu tương ứng.</p>
+
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-bottom:14px">
+
+  <!-- VÀNG -->
+  <div style="border:2px solid #f0c040;border-radius:10px;padding:14px">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+      <div style="width:28px;height:28px;border-radius:50%;background:#F5C518;border:1px solid #d4a800;flex-shrink:0"></div>
+      <div style="font-size:14px;font-weight:600;color:#854f0b">Túi / thùng VÀNG</div>
+    </div>
+    <div style="font-size:11px;font-weight:600;color:#854f0b;margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em">Chất thải lây nhiễm</div>
+    <ul style="font-size:12px;color:#5a5650;padding-left:15px;line-height:1.9;margin:0">
+      <li>Bông, băng, gạc <strong>dính máu/dịch</strong></li>
+      <li>Găng tay đã qua sử dụng</li>
+      <li>Tấm lót bàn khám có dính máu/dịch</li>
+      <li>Que tăm bông lấy mẫu</li>
+      <li>Mẫu bệnh phẩm, lọ đựng mẫu</li>
+      <li>Chất thải từ ca cách ly/truyền nhiễm</li>
+      <li>Chất thải giải phẫu (bọc 2 lớp túi vàng)</li>
+    </ul>
+    <div style="margin-top:8px;padding:6px 8px;background:#faeeda;border-radius:6px;font-size:11px;color:#633806">
+      ⚠️ Phải có biểu tượng <strong>Biohazard</strong> trên túi
+    </div>
+  </div>
+
+  <!-- ĐEN -->
+  <div style="border:2px solid #555;border-radius:10px;padding:14px">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+      <div style="width:28px;height:28px;border-radius:50%;background:#333;border:1px solid #222;flex-shrink:0"></div>
+      <div style="font-size:14px;font-weight:600;color:#1a1814">Túi / thùng ĐEN</div>
+    </div>
+    <div style="font-size:11px;font-weight:600;color:#333;margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em">Chất thải nguy hại không lây nhiễm</div>
+    <ul style="font-size:12px;color:#5a5650;padding-left:15px;line-height:1.9;margin:0">
+      <li>Thuốc hết hạn, thuốc thải bỏ</li>
+      <li>Hoá chất xét nghiệm thải</li>
+      <li>Dụng cụ dính hoá chất độc hại</li>
+      <li>Pin, nhiệt kế thuỷ ngân vỡ</li>
+    </ul>
+  </div>
+
+  <!-- XANH LÁ -->
+  <div style="border:2px solid #2ecc71;border-radius:10px;padding:14px">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+      <div style="width:28px;height:28px;border-radius:50%;background:#27ae60;border:1px solid #1e8449;flex-shrink:0"></div>
+      <div style="font-size:14px;font-weight:600;color:#1e8449">Túi / thùng XANH</div>
+    </div>
+    <div style="font-size:11px;font-weight:600;color:#1e8449;margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em">Chất thải thông thường – không tái chế</div>
+    <ul style="font-size:12px;color:#5a5650;padding-left:15px;line-height:1.9;margin:0">
+      <li>Rác sinh hoạt của nhân viên, KH</li>
+      <li>Giấy, khăn giấy không dính máu</li>
+      <li>Vỏ hộp không bị ô nhiễm</li>
+      <li>Thức ăn thừa</li>
+    </ul>
+  </div>
+
+  <!-- TRẮNG -->
+  <div style="border:2px solid #ccc;border-radius:10px;padding:14px">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+      <div style="width:28px;height:28px;border-radius:50%;background:#f5f5f5;border:1px solid #ccc;flex-shrink:0"></div>
+      <div style="font-size:14px;font-weight:600;color:#5a5650">Túi / thùng TRẮNG</div>
+    </div>
+    <div style="font-size:11px;font-weight:600;color:#5a5650;margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em">Chất thải tái chế</div>
+    <ul style="font-size:12px;color:#5a5650;padding-left:15px;line-height:1.9;margin:0">
+      <li>Chai nhựa, lọ thuỷ tinh sạch</li>
+      <li>Giấy, bìa carton sạch</li>
+      <li>Kim loại không bị ô nhiễm</li>
+    </ul>
+  </div>
+
+</div>
+
+<!-- Hộp kháng thủng -->
+<div style="border:2px solid #F5C518;border-radius:10px;padding:14px;margin-bottom:12px;background:#fffdf0">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+    <div style="width:28px;height:22px;border-radius:4px;background:#F5C518;border:1px solid #d4a800;flex-shrink:0"></div>
+    <div style="font-size:14px;font-weight:600;color:#854f0b">Hộp kháng thủng màu VÀNG – riêng cho vật sắc nhọn</div>
+  </div>
+  <ul style="font-size:12px;color:#5a5650;padding-left:15px;line-height:1.9;margin:0">
+    <li>Kim tiêm, bơm tiêm đã qua sử dụng</li>
+    <li>Lưỡi dao mổ, kim chỉ khâu</li>
+    <li>Ống mao quản, lam kính vỡ</li>
+    <li><strong>Không được bỏ vào túi nilon thường</strong> – nguy cơ đâm xuyên và lây nhiễm</li>
+  </ul>
+</div>
+
+<!-- Bảng tóm tắt thực hành tại Phụ Sản 1 -->
+<div style="background:#f0ede6;border-radius:8px;padding:12px 14px">
+  <div style="font-size:12px;font-weight:600;color:#1a1814;margin-bottom:8px">Thực hành tại Phụ Sản 1 – nhanh nhớ</div>
+  <table style="width:100%;font-size:12px;border-collapse:collapse">
+    <tr style="border-bottom:1px solid #e2ddd4">
+      <td style="padding:5px 8px;font-weight:600;width:45%">Vật/tình huống</td>
+      <td style="padding:5px 8px;font-weight:600">Bỏ vào đâu</td>
+    </tr>
+    <tr style="border-bottom:1px solid #e2ddd4"><td style="padding:5px 8px">Bông gạc dính máu/dịch</td><td style="padding:5px 8px;color:#854f0b;font-weight:600">Túi vàng</td></tr>
+    <tr style="border-bottom:1px solid #e2ddd4"><td style="padding:5px 8px">Găng tay đã dùng</td><td style="padding:5px 8px;color:#854f0b;font-weight:600">Túi vàng</td></tr>
+    <tr style="border-bottom:1px solid #e2ddd4"><td style="padding:5px 8px">Tấm lót bàn khám có dính dịch</td><td style="padding:5px 8px;color:#854f0b;font-weight:600">Túi vàng</td></tr>
+    <tr style="border-bottom:1px solid #e2ddd4"><td style="padding:5px 8px">Que tăm bông lấy mẫu</td><td style="padding:5px 8px;color:#854f0b;font-weight:600">Túi vàng</td></tr>
+    <tr style="border-bottom:1px solid #e2ddd4"><td style="padding:5px 8px">Kim tiêm sau dùng</td><td style="padding:5px 8px;color:#854f0b;font-weight:600">Hộp kháng thủng vàng</td></tr>
+    <tr style="border-bottom:1px solid #e2ddd4"><td style="padding:5px 8px">Vỏ lọ thuốc sạch, không dính hoá chất</td><td style="padding:5px 8px;color:#1e8449;font-weight:600">Túi xanh hoặc trắng</td></tr>
+    <tr style="border-bottom:1px solid #e2ddd4"><td style="padding:5px 8px">Khăn giấy, cốc nước của KH</td><td style="padding:5px 8px;color:#1e8449;font-weight:600">Túi xanh</td></tr>
+    <tr><td style="padding:5px 8px">Thuốc hết hạn</td><td style="padding:5px 8px;color:#333;font-weight:600">Túi đen</td></tr>
+  </table>
+</div>
+</div>
+
+<div class="slabel">Mnemonic – kỹ thuật ghi nhớ nhanh</div>
+
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-bottom:12px">
+
+  <!-- IgM vs IgG -->
+  <div style="background:#fff;border:1px solid #e2ddd4;border-radius:10px;padding:16px">
+    <div style="font-size:13px;font-weight:600;color:#1a1814;margin-bottom:10px">IgM vs IgG – hay nhầm nhất</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+      <div style="background:#fcebeb;border-radius:8px;padding:10px;text-align:center">
+        <div style="font-size:22px;font-weight:700;color:#a32d2d">IgM</div>
+        <div style="font-size:13px;font-weight:600;color:#a32d2d;margin:4px 0">M = Mới nhiễm</div>
+        <div style="font-size:11px;color:#5a5650">Nhiễm cấp tính đang xảy ra</div>
+        <div style="font-size:11px;font-weight:600;color:#a32d2d;margin-top:4px">→ Nguy hiểm → Báo BS ngay</div>
+      </div>
+      <div style="background:#e1f5ee;border-radius:8px;padding:10px;text-align:center">
+        <div style="font-size:22px;font-weight:700;color:#0f6e56">IgG</div>
+        <div style="font-size:13px;font-weight:600;color:#0f6e56;margin:4px 0">G = Ghi nhớ</div>
+        <div style="font-size:11px;color:#5a5650">Đã có miễn dịch từ trước</div>
+        <div style="font-size:11px;font-weight:600;color:#0f6e56;margin-top:4px">→ An toàn cho thai</div>
+      </div>
+    </div>
+    <div style="background:#f0ede6;border-radius:6px;padding:8px 10px;font-size:12px;color:#5a5650;text-align:center">
+      <strong>"M = Mới = Nguy hiểm · G = Ghi nhớ = An toàn"</strong>
+    </div>
+  </div>
+
+  <!-- TORCH -->
+  <div style="background:#fff;border:1px solid #e2ddd4;border-radius:10px;padding:16px">
+    <div style="font-size:13px;font-weight:600;color:#1a1814;margin-bottom:10px">TORCH – 4 bệnh nguy hiểm cho thai</div>
+    <div style="margin-bottom:10px">
+      <div style="display:flex;align-items:flex-start;gap:10px;padding:6px 0;border-bottom:1px solid #f0ede6">
+        <div style="width:28px;height:28px;border-radius:6px;background:#faeeda;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#854f0b;flex-shrink:0">TO</div>
+        <div><div style="font-size:12px;font-weight:600;color:#1a1814">Toxoplasma</div><div style="font-size:11px;color:#5a5650">Ký sinh trùng từ phân mèo, thịt sống chưa chín</div></div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:10px;padding:6px 0;border-bottom:1px solid #f0ede6">
+        <div style="width:28px;height:28px;border-radius:6px;background:#faece7;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#993c1d;flex-shrink:0">R</div>
+        <div><div style="font-size:12px;font-weight:600;color:#1a1814">Rubella</div><div style="font-size:11px;color:#5a5650">Sởi Đức – gây dị tật nặng nhất nếu nhiễm quý 1</div></div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:10px;padding:6px 0;border-bottom:1px solid #f0ede6">
+        <div style="width:28px;height:28px;border-radius:6px;background:#eeedfe;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#534ab7;flex-shrink:0">C</div>
+        <div><div style="font-size:12px;font-weight:600;color:#1a1814">CMV (Cytomegalovirus)</div><div style="font-size:11px;color:#5a5650">Virus rất phổ biến, lây qua nước bọt, nước tiểu</div></div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:10px;padding:6px 0">
+        <div style="width:28px;height:28px;border-radius:6px;background:#e6f1fb;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#185fa5;flex-shrink:0">H</div>
+        <div><div style="font-size:12px;font-weight:600;color:#1a1814">Herpes (HSV-1/2)</div><div style="font-size:11px;color:#5a5650">Lây qua tiếp xúc da/niêm mạc</div></div>
+      </div>
+    </div>
+    <div style="background:#fcebeb;border-radius:6px;padding:8px 10px;font-size:12px;color:#a32d2d;text-align:center">
+      <strong>IgM(+) bất kỳ loại nào → Báo BS ngay để hội chẩn</strong>
+    </div>
+  </div>
+
+  <!-- PlGF -->
+  <div style="background:#fff;border:1px solid #e2ddd4;border-radius:10px;padding:16px">
+    <div style="font-size:13px;font-weight:600;color:#1a1814;margin-bottom:10px">PlGF – Tiền sản giật Q1</div>
+    <div style="background:#f0ede6;border-radius:8px;padding:12px;margin-bottom:10px;text-align:center">
+      <div style="font-size:18px;font-weight:700;color:#534ab7;letter-spacing:.05em">Pl · G · F</div>
+      <div style="font-size:12px;color:#5a5650;margin-top:4px"><strong>Pl</strong>acental · <strong>G</strong>rowth · <strong>F</strong>actor</div>
+      <div style="font-size:11px;color:#5a5650;margin-top:2px">"Nhau thai (Placenta) có lớn (Growth) không?"</div>
+    </div>
+    <ul style="font-size:12px;color:#5a5650;padding-left:15px;line-height:1.9;margin:0 0 10px">
+      <li>PlGF <strong>thấp</strong> → nhau thai phát triển kém → nguy cơ TSG cao</li>
+      <li>Làm ở mốc 11t5n–13t6n, kết hợp với đo HA 2 tay và SA Doppler ĐM tử cung</li>
+    </ul>
+    <div style="background:#eeedfe;border-radius:6px;padding:8px 10px;font-size:12px;color:#534ab7;text-align:center">
+      <strong>Bộ 3 sàng lọc TSG: Máu (PlGF) + Tay (HA 2 tay) + SA (Doppler)</strong>
+    </div>
+  </div>
+
+  <!-- Mốc 11t5n–13t6n -->
+  <div style="background:#fff;border:1px solid #e2ddd4;border-radius:10px;padding:16px">
+    <div style="font-size:13px;font-weight:600;color:#1a1814;margin-bottom:10px">Mốc 11t5n–13t6n – nhớ theo 4 nhóm</div>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="display:flex;align-items:flex-start;gap:8px">
+        <div style="background:#e1f5ee;border-radius:6px;padding:3px 8px;font-size:11px;font-weight:600;color:#0f6e56;flex-shrink:0;white-space:nowrap">Hình ảnh</div>
+        <div style="font-size:12px;color:#5a5650">SA 5D đo <strong>độ mờ da gáy</strong> – "Soi mặt bé lần đầu"</div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:8px">
+        <div style="background:#eeedfe;border-radius:6px;padding:3px 8px;font-size:11px;font-weight:600;color:#534ab7;flex-shrink:0;white-space:nowrap">Dự báo TSG</div>
+        <div style="font-size:12px;color:#5a5650">PlGF + HA 2 tay + Doppler – "3 thứ: máu + tay + SA mạch"</div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:8px">
+        <div style="background:#faeeda;border-radius:6px;padding:3px 8px;font-size:11px;font-weight:600;color:#854f0b;flex-shrink:0;white-space:nowrap">TORCH</div>
+        <div style="font-size:12px;color:#5a5650">CMV + Toxoplasma + Rubella (IgG + IgM)</div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:8px">
+        <div style="background:#fcebeb;border-radius:6px;padding:3px 8px;font-size:11px;font-weight:600;color:#a32d2d;flex-shrink:0;white-space:nowrap">Lây nhiễm</div>
+        <div style="font-size:12px;color:#5a5650">HBsAg (viêm gan B) + TPHA (giang mai) + HIV</div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:8px">
+        <div style="background:#e6f1fb;border-radius:6px;padding:3px 8px;font-size:11px;font-weight:600;color:#185fa5;flex-shrink:0;white-space:nowrap">Sàng lọc gen</div>
+        <div style="font-size:12px;color:#5a5650">NIPT nếu chưa làm – "Máu mẹ tìm dị tật gen"</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Bảng mnemonic tổng hợp -->
+<div style="background:#fff;border:1px solid #e2ddd4;border-radius:10px;padding:14px;margin-bottom:12px">
+  <div style="font-size:12px;font-weight:600;color:#1a1814;margin-bottom:10px">Tổng hợp mnemonic – tra nhanh</div>
+  <table style="width:100%;border-collapse:collapse;font-size:12px">
+    <thead><tr style="background:#f0ede6">
+      <th style="padding:6px 10px;text-align:left;border:1px solid #e2ddd4">Cần nhớ</th>
+      <th style="padding:6px 10px;border:1px solid #e2ddd4">Mnemonic</th>
+    </tr></thead>
+    <tbody>
+      <tr style="border-bottom:1px solid #f0ede6"><td style="padding:6px 10px;font-weight:600">IgM vs IgG</td><td style="padding:6px 10px;color:#5a5650"><strong style="color:#a32d2d">M = Mới = Nguy hiểm</strong> · <strong style="color:#0f6e56">G = Ghi nhớ = An toàn</strong></td></tr>
+      <tr style="border-bottom:1px solid #f0ede6"><td style="padding:6px 10px;font-weight:600">TORCH</td><td style="padding:6px 10px;color:#5a5650"><strong>TO</strong>xoplasma · <strong>R</strong>ubella · <strong>C</strong>MV · <strong>H</strong>erpes</td></tr>
+      <tr style="border-bottom:1px solid #f0ede6"><td style="padding:6px 10px;font-weight:600">PlGF</td><td style="padding:6px 10px;color:#5a5650"><strong>Pl</strong>acental <strong>G</strong>rowth <strong>F</strong>actor – "Nhau thai có lớn không?"</td></tr>
+      <tr style="border-bottom:1px solid #f0ede6"><td style="padding:6px 10px;font-weight:600">PARA</td><td style="padding:6px 10px;color:#5a5650">"<strong>Đ</strong>ủ tháng – <strong>N</strong>on tháng – <strong>S</strong>ảy/Nạo – <strong>C</strong>òn sống"</td></tr>
+      <tr style="border-bottom:1px solid #f0ede6"><td style="padding:6px 10px;font-weight:600">Thứ tự khám AH–2PP</td><td style="padding:6px 10px;color:#5a5650">"Ăn Ăn Cua Tươi Cùng Phụ huynh" → A(H)–A(Đ)–C(TC)–T(C)–2(PP)</td></tr>
+      <tr style="border-bottom:1px solid #f0ede6"><td style="padding:6px 10px;font-weight:600">Mốc 11–13t6n</td><td style="padding:6px 10px;color:#5a5650">Hình ảnh · Dự báo TSG · TORCH · Lây nhiễm · Sàng lọc gen</td></tr>
+      <tr style="border-bottom:1px solid #f0ede6"><td style="padding:6px 10px;font-weight:600">CI 333</td><td style="padding:6px 10px;color:#5a5650">CTC mở + nhầy kéo sợi + cao mềm ngả trước → Estrogen đỉnh → Rụng trứng</td></tr>
+      <tr><td style="padding:6px 10px;font-weight:600">Môi trước/sau CTC</td><td style="padding:6px 10px;color:#5a5650">Trước = quanh <strong>12h</strong> (xương mu) · Sau = quanh <strong>6h</strong> (hậu môn)</td></tr>
+    </tbody>
+  </table>
+</div>
+</div><!-- end phuluc -->
+</body>
+</html>
